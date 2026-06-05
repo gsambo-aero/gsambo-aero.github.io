@@ -355,7 +355,14 @@
     }
     .project-card:hover .project-arrow { opacity: 1; }
 
-    /* coming soon badge */
+    /* bachelor project cards — half width, less prominent */
+    .project-card-sm {
+      opacity: 0.75;
+      transition: opacity 0.3s, border-color 0.3s;
+    }
+    .project-card-sm:hover { opacity: 1; }
+
+
     .badge-soon {
       position: absolute;
       top: 1rem; left: 1rem;
@@ -652,8 +659,45 @@
         <span class="project-arrow">↗</span>
       </a>
 
+      <!-- BACHELOR'S PROJECTS divider -->
+      <div style="grid-column: 1 / -1; padding: 1.5rem 1.5rem 0.5rem; border-top: 0.5px solid var(--border); margin-top: 0.5rem;">
+        <p style="font-family: var(--mono); font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-muted);">Bachelor's projects</p>
+      </div>
+
+      <!-- B1. Orbital Transfer -->
+      <a href="projects/orbital-transfer.html" class="project-card project-card-sm">
+        <div class="project-img-wrap" style="aspect-ratio: 16/7;">
+          <img src="images/missioni_spaziali.png" alt="Orbital transfer" class="project-img">
+        </div>
+        <div class="project-info" style="padding: 0.9rem 1.25rem 1.1rem;">
+          <p class="project-tag">Astrodynamics · Bachelor</p>
+          <h3 class="project-title" style="font-size: 0.85rem;">Orbital Transfer Planning</h3>
+        </div>
+        <span class="project-arrow">↗</span>
+      </a>
+
+      <!-- B2. F101 Engine -->
+      <a href="projects/f101-engine.html" class="project-card project-card-sm">
+        <div class="project-img-wrap" style="aspect-ratio: 16/7;">
+          <img src="images/propulsione_aereo.png" alt="F101 engine analysis" class="project-img">
+        </div>
+        <div class="project-info" style="padding: 0.9rem 1.25rem 1.1rem;">
+          <p class="project-tag">Propulsion · Bachelor</p>
+          <h3 class="project-title" style="font-size: 0.85rem;">F101-GE-102 Engine Analysis & Diffuser Design</h3>
+        </div>
+        <span class="project-arrow">↗</span>
+      </a>
+
+      <!-- spacer to push drone to next row -->
+      <div style="display:none;"></div>
+
+      <!-- WHERE IT ALL STARTED divider -->
+      <div style="grid-column: 1 / -1; padding: 1.5rem 1.5rem 0.5rem; border-top: 0.5px solid var(--border); margin-top: 0.5rem;">
+        <p style="font-family: var(--mono); font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-muted);">Where it all started</p>
+      </div>
+
       <!-- 8. Drone Maturità -->
-      <a href="projects/drone-maturita.html" class="project-card">
+      <a href="projects/drone-maturita.html" class="project-card project-card-sm" style="grid-column: 2 / 3;">
         <div class="project-img-wrap">
           <img src="images/drone-maturita.jpeg" alt="High school drone project" class="project-img">
         </div>
