@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Giovanni Sambo — Aerospace Engineering</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0c0e12;
+      --bg2: #13161c;
+      --bg3: #1a1e26;
+      --accent: #c8a96e;
+      --accent2: #7eb8d4;
+      --text: #e8e4dc;
+      --text-muted: #8a8680;
+      --border: rgba(200,169,110,0.15);
+      --mono: 'Space Mono', monospace;
+      --sans: 'DM Sans', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: 16px;
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.25rem 4rem;
+      background: rgba(12,14,18,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 0.5px solid var(--border);
+    }
+    .nav-logo {
+      font-family: var(--mono);
+      font-size: 13px;
+      color: var(--accent);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      text-decoration: none;
+    }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a {
+      font-size: 13px;
+      font-family: var(--mono);
+      color: var(--text-muted);
+      text-decoration: none;
+      letter-spacing: 0.05em;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--accent); }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 8rem 4rem 4rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -200px; right: -200px;
+      width: 600px; height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(200,169,110,0.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 6rem;
+      align-items: center;
+      max-width: 1100px;
+      width: 100%;
+    }
+    .hero-tag {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--accent);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+    }
+    .hero-name {
+      font-family: var(--mono);
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 700;
+      line-height: 1.1;
+      color: var(--text);
+      margin-bottom: 1rem;
+    }
+    .hero-name span { color: var(--accent); }
+    .hero-title {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      margin-bottom: 2rem;
+      font-weight: 300;
+      max-width: 480px;
+      line-height: 1.6;
+    }
+    .hero-links { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .btn {
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      padding: 0.65rem 1.5rem;
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      background: transparent;
+      text-decoration: none;
+      text-transform: uppercase;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+    .btn:hover { background: var(--accent); color: var(--bg); }
+    .btn-outline {
+      border-color: rgba(138,134,128,0.4);
+      color: var(--text-muted);
+    }
+    .btn-outline:hover { border-color: var(--text-muted); background: transparent; color: var(--text); }
+
+    .hero-photo-wrap {
+      position: relative;
+    }
+    .hero-photo-wrap::before {
+      content: '';
+      position: absolute;
+      inset: -8px;
+      border: 1px solid var(--border);
+      transform: rotate(2deg);
+    }
+    .hero-photo {
+      width: 100%;
+      aspect-ratio: 3/4;
+      object-fit: cover;
+      display: block;
+      background: var(--bg3);
+      /* placeholder until real photo is added */
+    }
+    .hero-photo-placeholder {
+      width: 100%;
+      aspect-ratio: 3/4;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      color: var(--text-muted);
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+    }
+    .hero-photo-placeholder svg { opacity: 0.3; }
+
+    /* ── SECTION COMMONS ── */
+    section { padding: 6rem 4rem; }
+    .section-label {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.75rem;
+    }
+    .section-title {
+      font-family: var(--mono);
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 3rem;
+      color: var(--text);
+    }
+    .divider {
+      border: none;
+      border-top: 0.5px solid var(--border);
+      margin: 0 4rem;
+    }
+
+    /* ── ABOUT ── */
+    .about { background: var(--bg2); }
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      max-width: 1100px;
+      align-items: start;
+    }
+    .about-text p {
+      color: var(--text-muted);
+      margin-bottom: 1.25rem;
+      font-size: 1rem;
+      line-height: 1.8;
+    }
+    .about-text p strong { color: var(--text); font-weight: 500; }
+    .about-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-top: 2.5rem;
+    }
+    .stat-box {
+      border: 0.5px solid var(--border);
+      padding: 1.25rem;
+      background: var(--bg3);
+    }
+    .stat-num {
+      font-family: var(--mono);
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--accent);
+      line-height: 1;
+      margin-bottom: 0.4rem;
+    }
+    .stat-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      font-family: var(--mono);
+      letter-spacing: 0.05em;
+    }
+    .about-photos {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+    }
+    .about-photo {
+      aspect-ratio: 1;
+      object-fit: cover;
+      width: 100%;
+      background: var(--bg3);
+      border: 0.5px solid var(--border);
+    }
+    .about-photo-placeholder {
+      aspect-ratio: 1;
+      background: var(--bg3);
+      border: 0.5px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      text-align: center;
+      padding: 1rem;
+    }
+    .about-photo-wide {
+      grid-column: span 2;
+      aspect-ratio: 16/7;
+    }
+
+    /* ── PROJECTS ── */
+    .projects { background: var(--bg); }
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5px;
+      max-width: 1100px;
+      border: 1.5px solid var(--border);
+    }
+    .project-card {
+      position: relative;
+      background: var(--bg2);
+      overflow: hidden;
+      cursor: pointer;
+      text-decoration: none;
+      display: block;
+      border: 0.5px solid transparent;
+      transition: border-color 0.3s;
+    }
+    .project-card:hover { border-color: var(--accent); z-index: 1; }
+    .project-card:hover .project-img-wrap::after { opacity: 0.5; }
+    .project-card:hover .project-arrow { transform: translate(3px, -3px); }
+    .project-img-wrap {
+      position: relative;
+      aspect-ratio: 16/9;
+      overflow: hidden;
+      background: var(--bg3);
+    }
+    .project-img-wrap::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, transparent 40%, var(--bg2));
+      opacity: 0.8;
+      transition: opacity 0.3s;
+    }
+    .project-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.5s ease;
+    }
+    .project-card:hover .project-img { transform: scale(1.04); }
+    .project-img-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      font-family: var(--mono);
+      font-size: 11px;
+      opacity: 0.5;
+    }
+    .project-info { padding: 1.25rem 1.5rem 1.5rem; }
+    .project-tag {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+    }
+    .project-title {
+      font-family: var(--mono);
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.3;
+      margin-bottom: 0.5rem;
+    }
+    .project-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+    .project-arrow {
+      position: absolute;
+      top: 1rem; right: 1rem;
+      font-size: 1.1rem;
+      color: var(--accent);
+      transition: transform 0.2s;
+      opacity: 0;
+    }
+    .project-card:hover .project-arrow { opacity: 1; }
+
+    /* coming soon badge */
+    .badge-soon {
+      position: absolute;
+      top: 1rem; left: 1rem;
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.3rem 0.75rem;
+      background: rgba(200,169,110,0.15);
+      border: 0.5px solid var(--accent);
+      color: var(--accent);
+      z-index: 2;
+    }
+
+    /* ── SKILLS ── */
+    .skills { background: var(--bg2); }
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 1px;
+      max-width: 1100px;
+      border: 1px solid var(--border);
+    }
+    .skill-group {
+      padding: 2rem;
+      background: var(--bg2);
+      border: 0.5px solid transparent;
+    }
+    .skill-group-title {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.25rem;
+    }
+    .skill-list { list-style: none; }
+    .skill-list li {
+      font-size: 14px;
+      color: var(--text-muted);
+      padding: 0.35rem 0;
+      border-bottom: 0.5px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .skill-list li:last-child { border-bottom: none; }
+    .skill-list li::before {
+      content: '—';
+      color: var(--accent);
+      font-family: var(--mono);
+      font-size: 10px;
+      flex-shrink: 0;
+    }
+
+    /* ── CONTACT ── */
+    .contact { background: var(--bg); text-align: center; }
+    .contact-inner { max-width: 560px; margin: 0 auto; }
+    .contact-title {
+      font-family: var(--mono);
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 1rem;
+    }
+    .contact-sub {
+      color: var(--text-muted);
+      margin-bottom: 2.5rem;
+      line-height: 1.8;
+    }
+    .contact-links { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 2rem 4rem;
+      border-top: 0.5px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    footer p {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--text-muted);
+      letter-spacing: 0.05em;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      nav { padding: 1rem 2rem; }
+      .nav-links { display: none; }
+      .hero { padding: 7rem 2rem 3rem; }
+      .hero-grid { grid-template-columns: 1fr; gap: 3rem; }
+      .hero-photo-wrap { max-width: 260px; }
+      section { padding: 4rem 2rem; }
+      .divider { margin: 0 2rem; }
+      .about-grid { grid-template-columns: 1fr; gap: 3rem; }
+      footer { padding: 1.5rem 2rem; flex-direction: column; gap: 0.5rem; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="#" class="nav-logo">G. Sambo</a>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero" id="home">
+    <div class="hero-grid">
+      <div class="hero-content">
+        <p class="hero-tag">Aerospace Engineering · Politecnico di Milano</p>
+        <h1 class="hero-name">Giovanni<br><span>Sambo</span></h1>
+        <p class="hero-title">
+          I study how air moves — through wings, around trucks, over rotors.
+          Experimental aerodynamics, CFD, and everything that flies, floats, or spins.
+        </p>
+        <div class="hero-links">
+          <a href="#projects" class="btn">View Projects</a>
+          <a href="mailto:giosambo2001@gmail.com" class="btn btn-outline">Get in touch</a>
+          <a href="https://linkedin.com/in/giovanni-sambo-245794235" target="_blank" class="btn btn-outline">LinkedIn</a>
+        </div>
+      </div>
+
+      <!-- Replace the placeholder div below with:
+           <img src="images/photo-hero.jpg" alt="Giovanni Sambo" class="hero-photo" />
+           once you upload your photo to an images/ folder -->
+      <div class="hero-photo-wrap">
+        <div class="hero-photo-placeholder">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+            <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+          </svg>
+          <span>Add your photo here</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- ABOUT -->
+  <section class="about" id="about">
+    <div class="about-grid">
+      <div class="about-text">
+        <p class="section-label">About me</p>
+        <h2 class="section-title" style="margin-bottom:1.5rem;">Building things,<br>understanding why they work.</h2>
+        <p>
+          I'm a 25-year-old aerospace engineering student at Politecnico di Milano, finishing my MSc thesis on <strong>Flettner rotors</strong> — spinning cylinders that generate lift using the Magnus effect, with real applications in wind-assisted ship propulsion.
+        </p>
+        <p>
+          My path through engineering has always leaned toward the hands-on: wind tunnel experiments, CFD simulations from scratch, flight testing with Pipistrel. I find the most interesting problems live at the intersection of data and physical intuition.
+        </p>
+        <p>
+          Outside the lab — water polo captain for years, 22 countries visited, Erasmus in Seville. I believe how you collaborate matters as much as what you know.
+        </p>
+        <div class="about-stats">
+          <div class="stat-box">
+            <div class="stat-num">7+</div>
+            <div class="stat-label">Engineering projects</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-num">22</div>
+            <div class="stat-label">Countries visited</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-num">MSc</div>
+            <div class="stat-label">PoliMi · Oct 2026</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-num">ENG</div>
+            <div class="stat-label">Working language</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Photo grid — replace placeholders with real images -->
+      <div class="about-photos">
+        <div class="about-photo-placeholder about-photo-wide">
+          <!-- <img src="images/windtunnel.jpg" alt="Wind tunnel" class="about-photo about-photo-wide"> -->
+          Wide photo — e.g. wind tunnel or Pipistrel flight
+        </div>
+        <div class="about-photo-placeholder">
+          <!-- <img src="images/photo2.jpg" alt="" class="about-photo"> -->
+          Photo 2
+        </div>
+        <div class="about-photo-placeholder">
+          <!-- <img src="images/photo3.jpg" alt="" class="about-photo"> -->
+          Photo 3
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- PROJECTS -->
+  <section class="projects" id="projects">
+    <p class="section-label">Work</p>
+    <h2 class="section-title">Projects</h2>
+
+    <div class="projects-grid">
+
+      <!-- 1. Flettner Rotor — COMING SOON -->
+      <a href="projects/flettner-rotor.html" class="project-card">
+        <span class="badge-soon">In progress</span>
+        <div class="project-img-wrap">
+          <!-- <img src="images/flettner-cover.jpg" alt="Flettner Rotor" class="project-img"> -->
+          <div class="project-img-placeholder">Flettner Rotor — add image</div>
+        </div>
+        <div class="project-info">
+          <p class="project-tag">MSc Thesis · Wind · Experimental</p>
+          <h3 class="project-title">Flettner Rotor — Magnus Effect for Ship Propulsion</h3>
+          <p class="project-desc">Wind tunnel campaign + CFD validation of a rotating cylinder generating lift via the Magnus effect.</p>
+        </div>
+        <span class="project-arrow">↗</span>
+      </a>
+
+      <!-- 2. Flight Testing -->
+      <a href="projects/flight-testing.html" class="project-card">
+        <div class="project-img-wrap">
+          <!-- <img src="images/pipistrel-cover.jpg" alt="Pipistrel" class="project-img"> -->
+          <div class="project-img-placeholder">Pipistrel flight — add image</div>
+        </div>
+        <div class="project-info">
+          <p class="project-tag">Flight Testing · Industry</p>
+          <h3 class="project-title">Flight Testing — Pipistrel Virus SW121A</h3>
+          <p class="project-desc">Experimental flight test campaign with Pipistrel Italia: test planning, data acquisition, post-flight analysis.</p>
+        </div>
+        <span class="project-arrow">↗</span>
+      </a>
+
+      <!-- 3. CFD F1 -->
+      <a href="projects/f1-cfd.html" class="project-card">
+        <div class="project-img-wrap">
+          <!-- <img src="images/f1-cover.jpg" alt="F1 CFD" class="project-img"> -->
+          <div class="project-img-placeholder">F1 CFD render — add image</div>
+        </div>
+        <div class="project-info">
+          <p class="project-tag">CFD · SU2 · Motorsport</p>
+          <h3 class="project-title">CFD Analysis — Formula 1 Front Wing</h3>
+          <p class="project-desc">Unsteady compressible URANS simulations to investigate ground effect and porpoising on an F1 front wing.</p>
+        </div>
+        <span class="project-arrow">↗</span>
+      </a>
+
+      <!-- 4. Wind Turbine -->
+      <a href="projects/wind-turbine.html" class="project-card">
+        <div class="project-img-wrap">
+          <div class="project-img-placeholder">Wind turbine — add image</div>
+        </div>
+        <div class="project-info">
+          <p class="project-tag">Wind Energy · Aeroelasticity</p>
+          <h3 class="project-title">2.3 MW Wind Turbine Design</h3>
+          <p class="project-desc">Multidisciplinary aero-servo-elastic design of an IEC Class IA wind turbine, minimising Cost of Energy.</p>
+        </div>
+        <span class="project-arrow">↗</span>
+      </a>
+
+      <!-- 5. Bus Aero -->
+      <a href="projects/bus-aerodynamics.html" class="project-card">
+        <div class="project-img-wrap">
+          <div class="project-img-placeholder">Bus CFD — add image</div>
+        </div>
+        <div class="project-info">
+          <p class="project-tag">CFD · OpenFOAM · Experimental</p>
+          <h3 class="project-title">Aerodynamic Drag Reduction — Travel Bus</h3>
+          <p class="project-desc">OpenFOAM simulations and wind tunnel validation to reduce aerodynamic drag on a full-scale touring bus.</p>
+        </div>
+        <span class="project-arrow">↗</span>
+      </a>
+
+      <!-- 6. eVTOL PIV -->
+      <a href="projects/evtol-piv.html" class="project-card">
+        <div class="project-img-wrap">
+          <div class="project-img-placeholder">PIV visualisation — add image</div>
+        </div>
+        <div class="project-info">
+          <p class="project-tag">Experimental · PIV · eVTOL</p>
+          <h3 class="project-title">eVTOL Side-by-Side Rotor PIV Analysis</h3>
+          <p class="project-desc">Wind tunnel PIV analysis of vortex dynamics and rotor-rotor interaction in a side-by-side eVTOL configuration.</p>
+        </div>
+        <span class="project-arrow">↗</span>
+      </a>
+
+      <!-- 7. Truck Rollover -->
+      <a href="projects/truck-rollover.html" class="project-card">
+        <div class="project-img-wrap">
+          <div class="project-img-placeholder">Truck simulation — add image</div>
+        </div>
+        <div class="project-info">
+          <p class="project-tag">MATLAB · Dynamics · Wind</p>
+          <h3 class="project-title">Heavy Truck Crosswind Rollover</h3>
+          <p class="project-desc">Multi-DOF stability simulation of a heavy truck under transient crosswind conditions.</p>
+        </div>
+        <span class="project-arrow">↗</span>
+      </a>
+
+      <!-- 8. Drone Maturità -->
+      <a href="projects/drone-maturita.html" class="project-card">
+        <div class="project-img-wrap">
+          <!-- <img src="images/drone-cover.jpg" alt="Drone" class="project-img"> -->
+          <div class="project-img-placeholder">Drone — add image</div>
+        </div>
+        <div class="project-info">
+          <p class="project-tag">Where it started · 2019</p>
+          <h3 class="project-title">High School Drone Project</h3>
+          <p class="project-desc">Self-built drone for my high school final exam — the project that made me choose aerospace engineering.</p>
+        </div>
+        <span class="project-arrow">↗</span>
+      </a>
+
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- SKILLS -->
+  <section class="skills" id="skills">
+    <p class="section-label">Technical stack</p>
+    <h2 class="section-title">Skills</h2>
+    <div class="skills-grid">
+      <div class="skill-group">
+        <p class="skill-group-title">CFD & Simulation</p>
+        <ul class="skill-list">
+          <li>SU2 — compressible URANS</li>
+          <li>OpenFOAM</li>
+          <li>XFOIL — airfoil analysis</li>
+          <li>Paraview — post-processing</li>
+          <li>Cp-Lambda — wind turbines</li>
+        </ul>
+      </div>
+      <div class="skill-group">
+        <p class="skill-group-title">Experimental</p>
+        <ul class="skill-list">
+          <li>Wind tunnel testing</li>
+          <li>Aerodynamic force balances</li>
+          <li>PIV — particle image velocimetry</li>
+          <li>Smoke flow visualisation</li>
+          <li>Flight test instrumentation</li>
+        </ul>
+      </div>
+      <div class="skill-group">
+        <p class="skill-group-title">Programming</p>
+        <ul class="skill-list">
+          <li>MATLAB — advanced</li>
+          <li>C — basic</li>
+          <li>Excel — data processing</li>
+        </ul>
+      </div>
+      <div class="skill-group">
+        <p class="skill-group-title">CAD & Design</p>
+        <ul class="skill-list">
+          <li>SolidWorks</li>
+          <li>Autodesk Inventor</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- CONTACT -->
+  <section class="contact" id="contact">
+    <div class="contact-inner">
+      <p class="section-label">Get in touch</p>
+      <h2 class="contact-title">Let's talk.</h2>
+      <p class="contact-sub">
+        I'm finishing my MSc at Politecnico di Milano and available from October 2026.
+        Open to roles in aerodynamics, CFD, R&D, and wind energy across Europe.
+      </p>
+      <div class="contact-links">
+        <a href="mailto:giosambo2001@gmail.com" class="btn">Email me</a>
+        <a href="https://linkedin.com/in/giovanni-sambo-245794235" target="_blank" class="btn btn-outline">LinkedIn</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>© 2025 Giovanni Sambo</p>
+    <p>Politecnico di Milano · MSc Aerospace Engineering</p>
+  </footer>
+
+</body>
+</html>
