@@ -239,7 +239,7 @@
     }
     .about-photos {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1fr 1fr 1fr;
       gap: 0.75rem;
     }
     .about-photo {
@@ -264,7 +264,7 @@
       padding: 1rem;
     }
     .about-photo-wide {
-      grid-column: span 2;
+      grid-column: span 3;
       aspect-ratio: 16/7;
     }
 
@@ -491,12 +491,7 @@
            <img src="images/photo-hero.jpg" alt="Giovanni Sambo" class="hero-photo" />
            once you upload your photo to an images/ folder -->
       <div class="hero-photo-wrap">
-        <div class="hero-photo-placeholder">
-          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
-            <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
-          </svg>
-          <span>Add your photo here</span>
-        </div>
+        <img src="images/hero.jpeg" alt="Giovanni Sambo" class="hero-photo" />
       </div>
     </div>
   </section>
@@ -538,20 +533,11 @@
         </div>
       </div>
 
-      <!-- Photo grid — replace placeholders with real images -->
       <div class="about-photos">
-        <div class="about-photo-placeholder about-photo-wide">
-          <!-- <img src="images/windtunnel.jpg" alt="Wind tunnel" class="about-photo about-photo-wide"> -->
-          Wide photo — e.g. wind tunnel or Pipistrel flight
-        </div>
-        <div class="about-photo-placeholder">
-          <!-- <img src="images/photo2.jpg" alt="" class="about-photo"> -->
-          Photo 2
-        </div>
-        <div class="about-photo-placeholder">
-          <!-- <img src="images/photo3.jpg" alt="" class="about-photo"> -->
-          Photo 3
-        </div>
+        <img src="images/pipistrel-team.jpeg" alt="Pipistrel flight test team" class="about-photo about-photo-wide" />
+        <img src="images/windtunnel-flettner.jpeg" alt="Wind tunnel experiment" class="about-photo" />
+        <img src="images/bus-job.jpeg" alt="Working on bus model" class="about-photo" />
+        <img src="images/drone-job.jpeg" alt="Building the drone" class="about-photo" />
       </div>
     </div>
   </section>
@@ -569,8 +555,7 @@
       <a href="projects/flettner-rotor.html" class="project-card">
         <span class="badge-soon">In progress</span>
         <div class="project-img-wrap">
-          <!-- <img src="images/flettner-cover.jpg" alt="Flettner Rotor" class="project-img"> -->
-          <div class="project-img-placeholder">Flettner Rotor — add image</div>
+          <img src="images/windtunnel-flettner.jpeg" alt="Flettner Rotor wind tunnel" class="project-img">
         </div>
         <div class="project-info">
           <p class="project-tag">MSc Thesis · Wind · Experimental</p>
@@ -583,8 +568,7 @@
       <!-- 2. Flight Testing -->
       <a href="projects/flight-testing.html" class="project-card">
         <div class="project-img-wrap">
-          <!-- <img src="images/pipistrel-cover.jpg" alt="Pipistrel" class="project-img"> -->
-          <div class="project-img-placeholder">Pipistrel flight — add image</div>
+          <img src="images/Pipistrel_flight.png" alt="Pipistrel Virus SW121A" class="project-img">
         </div>
         <div class="project-info">
           <p class="project-tag">Flight Testing · Industry</p>
@@ -597,8 +581,7 @@
       <!-- 3. CFD F1 -->
       <a href="projects/f1-cfd.html" class="project-card">
         <div class="project-img-wrap">
-          <!-- <img src="images/f1-cover.jpg" alt="F1 CFD" class="project-img"> -->
-          <div class="project-img-placeholder">F1 CFD render — add image</div>
+          <img src="images/CFD_front_wing.png" alt="F1 front wing CFD" class="project-img">
         </div>
         <div class="project-info">
           <p class="project-tag">CFD · SU2 · Motorsport</p>
@@ -611,7 +594,7 @@
       <!-- 4. Wind Turbine -->
       <a href="projects/wind-turbine.html" class="project-card">
         <div class="project-img-wrap">
-          <div class="project-img-placeholder">Wind turbine — add image</div>
+          <img src="images/turbina_eolica.png" alt="Wind turbine design" class="project-img">
         </div>
         <div class="project-info">
           <p class="project-tag">Wind Energy · Aeroelasticity</p>
@@ -624,7 +607,7 @@
       <!-- 5. Bus Aero -->
       <a href="projects/bus-aerodynamics.html" class="project-card">
         <div class="project-img-wrap">
-          <div class="project-img-placeholder">Bus CFD — add image</div>
+          <img src="images/bus-windtunnel.jpeg" alt="Bus wind tunnel aerodynamics" class="project-img">
         </div>
         <div class="project-info">
           <p class="project-tag">CFD · OpenFOAM · Experimental</p>
@@ -636,8 +619,17 @@
 
       <!-- 6. eVTOL PIV -->
       <a href="projects/evtol-piv.html" class="project-card">
-        <div class="project-img-wrap">
-          <div class="project-img-placeholder">PIV visualisation — add image</div>
+        <div class="project-img-wrap" style="position:relative;">
+          <div class="slider" id="evtol-slider" style="display:flex; width:100%; height:100%; transition: none;">
+            <img src="images/airfoil-lab.jpeg" alt="eVTOL PIV lab" class="project-img" style="min-width:100%; flex-shrink:0;" />
+            <img src="images/sperimentazione_PIV.png" alt="PIV visualisation" class="project-img" style="min-width:100%; flex-shrink:0;" />
+          </div>
+          <button onclick="event.preventDefault(); slideEvtol(-1)" style="position:absolute;left:0.5rem;top:50%;transform:translateY(-50%);background:rgba(12,14,18,0.7);border:0.5px solid rgba(200,169,110,0.4);color:#c8a96e;width:28px;height:28px;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;z-index:3;">‹</button>
+          <button onclick="event.preventDefault(); slideEvtol(1)" style="position:absolute;right:0.5rem;top:50%;transform:translateY(-50%);background:rgba(12,14,18,0.7);border:0.5px solid rgba(200,169,110,0.4);color:#c8a96e;width:28px;height:28px;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;z-index:3;">›</button>
+          <div style="position:absolute;bottom:0.5rem;left:50%;transform:translateX(-50%);display:flex;gap:4px;z-index:3;">
+            <span id="dot-0" style="width:5px;height:5px;border-radius:50%;background:#c8a96e;opacity:1;"></span>
+            <span id="dot-1" style="width:5px;height:5px;border-radius:50%;background:#c8a96e;opacity:0.3;"></span>
+          </div>
         </div>
         <div class="project-info">
           <p class="project-tag">Experimental · PIV · eVTOL</p>
@@ -650,7 +642,7 @@
       <!-- 7. Truck Rollover -->
       <a href="projects/truck-rollover.html" class="project-card">
         <div class="project-img-wrap">
-          <div class="project-img-placeholder">Truck simulation — add image</div>
+          <img src="images/wind-truck.png" alt="Truck crosswind simulation" class="project-img">
         </div>
         <div class="project-info">
           <p class="project-tag">MATLAB · Dynamics · Wind</p>
@@ -663,8 +655,7 @@
       <!-- 8. Drone Maturità -->
       <a href="projects/drone-maturita.html" class="project-card">
         <div class="project-img-wrap">
-          <!-- <img src="images/drone-cover.jpg" alt="Drone" class="project-img"> -->
-          <div class="project-img-placeholder">Drone — add image</div>
+          <img src="images/drone-maturita.jpeg" alt="High school drone project" class="project-img">
         </div>
         <div class="project-info">
           <p class="project-tag">Where it started · 2019</p>
@@ -746,5 +737,17 @@
     <p>Politecnico di Milano · MSc Aerospace Engineering</p>
   </footer>
 
+  <script>
+    let evtolIdx = 0;
+    function slideEvtol(dir) {
+      const slider = document.getElementById('evtol-slider');
+      const imgs = slider.querySelectorAll('img');
+      evtolIdx = (evtolIdx + dir + imgs.length) % imgs.length;
+      slider.style.transition = 'transform 0.35s ease';
+      slider.style.transform = 'translateX(-' + (evtolIdx * 100) + '%)';
+      document.getElementById('dot-0').style.opacity = evtolIdx === 0 ? '1' : '0.3';
+      document.getElementById('dot-1').style.opacity = evtolIdx === 1 ? '1' : '0.3';
+    }
+  </script>
 </body>
 </html>
