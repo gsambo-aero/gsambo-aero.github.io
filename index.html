@@ -59,7 +59,7 @@
     .nav-links a {
       font-size: 13px;
       font-family: var(--mono);
-      color: var(--text-muted);
+      color: #c8c4bc;
       text-decoration: none;
       letter-spacing: 0.05em;
       transition: color 0.2s;
@@ -482,6 +482,8 @@
       <li><a href="#projects">Projects</a></li>
       <li><a href="#skills">Skills</a></li>
       <li><a href="#contact">Contact</a></li>
+      <li><a href="#extra">Extra</a></li>
+      <li><a href="giovanni-sambo-cv.pdf" download style="color:var(--accent);border:0.5px solid var(--accent);padding:0.3rem 0.9rem;">CV ↓</a></li>
     </ul>
   </nav>
 
@@ -667,38 +669,6 @@
         <span class="project-arrow">↗</span>
       </a>
 
-      <!-- BACHELOR'S PROJECTS divider -->
-      <div style="grid-column: 1 / -1; padding: 1.5rem 1.5rem 0.5rem; border-top: 0.5px solid var(--border); margin-top: 0.5rem;">
-        <p style="font-family: var(--mono); font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-muted);">Bachelor's projects</p>
-      </div>
-
-      <!-- B1. Orbital Transfer -->
-      <a href="projects/orbital-transfer.html" class="project-card project-card-sm">
-        <div class="project-img-wrap" style="aspect-ratio: 16/7;">
-          <img src="images/missioni_spaziali.png" alt="Orbital transfer" class="project-img">
-        </div>
-        <div class="project-info" style="padding: 0.9rem 1.25rem 1.1rem;">
-          <p class="project-tag">Astrodynamics · Bachelor</p>
-          <h3 class="project-title" style="font-size: 0.85rem;">Orbital Transfer Planning</h3>
-        </div>
-        <span class="project-arrow">↗</span>
-      </a>
-
-      <!-- B2. F101 Engine -->
-      <a href="projects/f101-engine.html" class="project-card project-card-sm">
-        <div class="project-img-wrap" style="aspect-ratio: 16/7;">
-          <img src="images/propulsione_aereo.png" alt="F101 engine analysis" class="project-img">
-        </div>
-        <div class="project-info" style="padding: 0.9rem 1.25rem 1.1rem;">
-          <p class="project-tag">Propulsion · Bachelor</p>
-          <h3 class="project-title" style="font-size: 0.85rem;">F101-GE-102 Engine Analysis & Diffuser Design</h3>
-        </div>
-        <span class="project-arrow">↗</span>
-      </a>
-
-      <!-- spacer to push drone to next row -->
-      <div style="display:none;"></div>
-
       <!-- WHERE IT ALL STARTED divider -->
       <div style="grid-column: 1 / -1; padding: 1.5rem 1.5rem 0.5rem; border-top: 0.5px solid var(--border); margin-top: 0.5rem;">
         <p style="font-family: var(--mono); font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-muted);">Where it all started</p>
@@ -722,7 +692,26 @@
 
   <hr class="divider" />
 
-  <!-- SKILLS -->
+  <!-- BEYOND ENGINEERING -->
+  <section class="projects" id="extra" style="background:var(--bg2);">
+    <p class="section-label">Beyond Engineering</p>
+    <h2 class="section-title">Life outside the lab</h2>
+    <div class="projects-grid" style="max-width:400px;">
+      <a href="extra.html" class="project-card">
+        <div class="project-img-wrap">
+          <img src="images/personal-3.jpeg" alt="Beyond Engineering" class="project-img">
+        </div>
+        <div class="project-info">
+          <p class="project-tag">Sport · Travel · People</p>
+          <h3 class="project-title">Who I am beyond the equations</h3>
+          <p class="project-desc">Water polo, Erasmus, 22 countries, and the jobs that had nothing to do with aerospace.</p>
+        </div>
+        <span class="project-arrow">↗</span>
+      </a>
+    </div>
+  </section>
+
+  <hr class="divider" />
   <section class="skills" id="skills">
     <p class="section-label">Technical stack</p>
     <h2 class="section-title">Skills</h2>
@@ -778,6 +767,7 @@
       </p>
       <div class="contact-links">
         <a href="mailto:giosambo2001@gmail.com" class="btn">Email me</a>
+        <a href="giovanni-sambo-cv.pdf" download class="btn">Download CV ↓</a>
         <a href="https://linkedin.com/in/giovanni-sambo-245794235" target="_blank" class="btn btn-outline">LinkedIn</a>
       </div>
     </div>
