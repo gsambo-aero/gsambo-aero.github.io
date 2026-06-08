@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CFD F1 Front Wing — Giovanni Sambo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-85QGGEVQND"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-85QGGEVQND');
+  </script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0c0e12;
+      --bg2: #13161c;
+      --bg3: #1a1e26;
+      --accent: #c8a96e;
+      --text: #e8e4dc;
+      --text-muted: #8a8680;
+      --border: rgba(200,169,110,0.15);
+      --mono: 'Space Mono', monospace;
+      --sans: 'DM Sans', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: 16px;
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.25rem 4rem;
+      background: rgba(12,14,18,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 0.5px solid var(--border);
+    }
+    .nav-logo {
+      font-family: var(--mono);
+      font-size: 13px;
+      color: var(--accent);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      text-decoration: none;
+    }
+    .back-link {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: #c8c4bc;
+      text-decoration: none;
+      letter-spacing: 0.05em;
+      transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--accent); }
+
+    .hero {
+      height: 90vh;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: flex-end;
+      padding: 4rem;
+    }
+    .hero-img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(12,14,18,0.95) 0%, rgba(12,14,18,0.4) 60%, transparent 100%);
+    }
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 700px;
+    }
+    .hero-tag {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--accent);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+    .hero-title {
+      font-family: var(--mono);
+      font-size: clamp(2rem, 4vw, 3.5rem);
+      font-weight: 700;
+      line-height: 1.1;
+      color: var(--text);
+      margin-bottom: 1.25rem;
+    }
+    .hero-sub {
+      font-size: 1.05rem;
+      color: rgba(232,228,220,0.7);
+      max-width: 540px;
+      line-height: 1.7;
+    }
+
+    .section {
+      padding: 5rem 4rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .section-label {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.75rem;
+    }
+    .section-title {
+      font-family: var(--mono);
+      font-size: 1.6rem;
+      font-weight: 700;
+      margin-bottom: 1.75rem;
+      color: var(--text);
+    }
+    .section-text {
+      color: var(--text-muted);
+      font-size: 1rem;
+      line-height: 1.9;
+      max-width: 680px;
+    }
+    .section-text p { margin-bottom: 1.25rem; }
+    .section-text p:last-child { margin-bottom: 0; }
+    .section-text strong { color: var(--text); font-weight: 500; }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+    }
+    .two-col.reverse { direction: rtl; }
+    .two-col.reverse > * { direction: ltr; }
+
+    .img-full {
+      width: 100%;
+      display: block;
+      border: 0.5px solid var(--border);
+    }
+    .img-caption {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--text-muted);
+      letter-spacing: 0.08em;
+      margin-top: 0.6rem;
+      text-transform: uppercase;
+    }
+
+    .specs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 1px;
+      border: 1px solid var(--border);
+      margin-top: 3rem;
+    }
+    .spec-item {
+      padding: 1.25rem 1.5rem;
+      background: var(--bg2);
+    }
+    .spec-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.4rem;
+    }
+    .spec-value {
+      font-size: 13px;
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    .findings-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      border: 1px solid var(--border);
+      margin-top: 2rem;
+    }
+    .finding-item {
+      padding: 1.5rem;
+      background: var(--bg2);
+    }
+    .finding-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+    }
+    .finding-value {
+      font-family: var(--mono);
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 0.4rem;
+    }
+    .finding-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    .photo-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+      margin-top: 2rem;
+    }
+    .photo-grid img {
+      width: 100%;
+      object-fit: cover;
+      display: block;
+      border: 0.5px solid var(--border);
+    }
+    .photo-grid img.wide {
+      grid-column: span 2;
+      aspect-ratio: 16/7;
+    }
+    .photo-grid img.square { aspect-ratio: 4/3; }
+
+    .divider {
+      border: none;
+      border-top: 0.5px solid var(--border);
+      margin: 0 4rem;
+    }
+
+    footer {
+      padding: 2rem 4rem;
+      border-top: 0.5px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    footer p {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    @media (max-width: 800px) {
+      nav { padding: 1rem 1.5rem; }
+      .hero { padding: 2rem; }
+      .section { padding: 3rem 1.5rem; }
+      .divider { margin: 0 1.5rem; }
+      .two-col { grid-template-columns: 1fr; gap: 2rem; }
+      .two-col.reverse { direction: ltr; }
+      .findings-grid { grid-template-columns: 1fr; }
+      footer { padding: 1.5rem; flex-direction: column; gap: 0.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="../portfolio.html" class="nav-logo">← G. Sambo</a>
+    <a href="../portfolio.html" class="back-link">Back to portfolio</a>
+  </nav>
+
+  <!-- HERO -->
+  <div class="hero">
+    <img src="../images/CFD_flussofinaleunsteady.png" alt="CFD flow field F1 front wing" class="hero-img" />
+    <div class="hero-content">
+      <p class="hero-tag">CFD · SU2 · Motorsport · Politecnico di Milano · A.A. 2024–2025</p>
+      <h1 class="hero-title">Ground Effect &<br>Porpoising on a<br>F1 Front Wing</h1>
+      <p class="hero-sub">2D compressible RANS/URANS simulations of a 2022 Formula 1 front wing — comparing steady ground effect with the unsteady aerodynamics of porpoising.</p>
+    </div>
+  </div>
+
+  <!-- OVERVIEW -->
+  <section class="section">
+    <div class="two-col">
+      <div>
+        <p class="section-label">Overview</p>
+        <h2 class="section-title">When the wing<br>bounces off the ground.</h2>
+        <div class="section-text">
+          <p>
+            This CFD project analyzed the aerodynamic behavior of a <strong>2022 Formula 1 front wing</strong> in two conditions: stationary ground effect, and the <strong>porpoising</strong> phenomenon — the repetitive vertical oscillation at 4–8 Hz that plagued several F1 teams in 2022.
+          </p>
+          <p>
+            Using the open-source solver <strong>SU2</strong>, we ran 2D compressible simulations on a three-element wing based on NACA profiles (4412, 6412, 2410), modeled after Section D of the 2022 FIA-compliant front wing geometry. The ground was modeled as a <strong>moving wall</strong> at freestream velocity to correctly simulate the ground effect.
+          </p>
+          <p>
+            The steady case used <strong>compressible RANS</strong> equations; the porpoising case adopted a <strong>URANS formulation</strong> with dual time-stepping, imposing a 6 Hz plunging motion with 5 cm peak-to-peak amplitude.
+          </p>
+        </div>
+      </div>
+      <div>
+        <img src="../images/CFD_3d_front_wing.png" alt="3D F1 front wing geometry" class="img-full" />
+        <p class="img-caption">2022 F1 front wing — Section D selected for 2D analysis</p>
+      </div>
+    </div>
+
+    <div class="specs-grid">
+      <div class="spec-item">
+        <p class="spec-label">Solver</p>
+        <p class="spec-value">SU2 (open-source)</p>
+      </div>
+      <div class="spec-item">
+        <p class="spec-label">Flow regime</p>
+        <p class="spec-value">Compressible, Ma = 0.176 (60 m/s)</p>
+      </div>
+      <div class="spec-item">
+        <p class="spec-label">Reynolds number</p>
+        <p class="spec-value">Re ≈ 9.05 × 10⁵</p>
+      </div>
+      <div class="spec-item">
+        <p class="spec-label">Turbulence model</p>
+        <p class="spec-value">Spalart-Allmaras (SA)</p>
+      </div>
+      <div class="spec-item">
+        <p class="spec-label">Steady case</p>
+        <p class="spec-value">2D compressible RANS</p>
+      </div>
+      <div class="spec-item">
+        <p class="spec-label">Unsteady case</p>
+        <p class="spec-value">URANS + dual time-stepping</p>
+      </div>
+      <div class="spec-item">
+        <p class="spec-label">Porpoising frequency</p>
+        <p class="spec-value">6 Hz · 5 cm peak-to-peak</p>
+      </div>
+      <div class="spec-item">
+        <p class="spec-label">Wing profiles</p>
+        <p class="spec-value">NACA 4412 · 6412 · 2410</p>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- MESH -->
+  <section class="section">
+    <div class="two-col reverse">
+      <div>
+        <img src="../images/CFD_mesh_vicinoaiprofili.png" alt="Hybrid mesh near airfoil profiles" class="img-full" />
+        <p class="img-caption">Hybrid mesh — structured boundary layer + unstructured farfield</p>
+      </div>
+      <div>
+        <p class="section-label">Mesh & Setup</p>
+        <h2 class="section-title">Hybrid mesh,<br>y⁺ = 1.</h2>
+        <div class="section-text">
+          <p>
+            The computational domain used a <strong>rectangular farfield</strong> configuration with two refinement boxes — one broad rectangular zone around the wing, and a trapezoidal zone in close proximity to the profiles for near-field accuracy.
+          </p>
+          <p>
+            The mesh combined <strong>structured quadrilateral elements</strong> in the boundary layer (y⁺ = 1 at all surfaces) with an <strong>unstructured triangular grid</strong> in the farfield. This hybrid approach balanced accuracy in viscous regions with computational efficiency in the outer domain.
+          </p>
+          <p>
+            Mesh, farfield, and time convergence analyses were performed systematically to validate the setup before running the porpoising simulation.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top: 2rem;">
+      <img src="../images/CFD_dominio.png" alt="Computational domain" class="img-full" />
+      <p class="img-caption">Computational domain — rectangular farfield with two refinement boxes</p>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- RESULTS -->
+  <section class="section">
+    <p class="section-label">Key findings</p>
+    <h2 class="section-title">Porpoising halves downforce<br>and nearly doubles drag.</h2>
+    <div class="section-text">
+      <p>
+        The comparison between steady-state ground effect and the porpoising simulation revealed the severe aerodynamic penalty of the bouncing phenomenon. The cyclic variation in ground clearance drives the wing through alternating phases of high and low downforce, degrading overall efficiency.
+      </p>
+    </div>
+
+    <div class="findings-grid">
+      <div class="finding-item">
+        <p class="finding-label">Average downforce (C<sub>L</sub>)</p>
+        <p class="finding-value">−54% vs steady</p>
+        <p class="finding-desc">Rapid ground clearance variations cause alternating high/low downforce phases. The time-averaged lift is approximately halved.</p>
+      </div>
+      <div class="finding-item">
+        <p class="finding-label">Average drag (C<sub>D</sub>)</p>
+        <p class="finding-value">+79% vs steady</p>
+        <p class="finding-desc">Oscillatory motion increases turbulence and viscous losses. Drag nearly doubles compared to the stationary case.</p>
+      </div>
+      <div class="finding-item">
+        <p class="finding-label">Flow at lower peak</p>
+        <p class="finding-desc">Wing closest to ground — maximum flow acceleration beneath profiles, strong pressure gradients, highest risk of flow separation at leading and trailing edges.</p>
+      </div>
+      <div class="finding-item">
+        <p class="finding-label">Flow at upper peak</p>
+        <p class="finding-desc">Wing farthest from ground — shorter wake, reduced ground interaction, lower induced drag. Flow is more uniform above and below profiles.</p>
+      </div>
+    </div>
+
+    <div style="margin-top: 2.5rem;">
+      <img src="../images/CFD_flussofinaleunsteady.png" alt="Unsteady flow field velocity magnitude" class="img-full" />
+      <p class="img-caption">Velocity magnitude field — unsteady URANS simulation during porpoising oscillation</p>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- TURBULENCE MODEL -->
+  <section class="section">
+    <p class="section-label">Methodology note</p>
+    <h2 class="section-title">SA vs SST —<br>accuracy vs cost.</h2>
+    <div class="section-text">
+      <p>
+        Both the <strong>Spalart-Allmaras (SA)</strong> and <strong>SST k-ω</strong> turbulence models were evaluated. The SST model showed marginally better accuracy in capturing flow separation near leading and trailing edges, but at higher computational cost. The relative error between the two models on CL was below 1.1%.
+      </p>
+      <p>
+        Given the high computational demand of the URANS porpoising simulation, the <strong>SA model was selected</strong> for the unsteady analysis — a deliberate trade-off between fidelity and computational efficiency that is standard practice in applied CFD.
+      </p>
+      <p>
+        Future extensions of this work could incorporate <strong>3D simulations</strong> and <strong>aeroelastic effects</strong> to capture the full complexity of the porpoising phenomenon in real racing conditions.
+      </p>
+    </div>
+  </section>
+
+  <footer>
+    <p>© 2025 Giovanni Sambo</p>
+    <a href="../portfolio.html" style="font-family: var(--mono); font-size: 11px; color: var(--text-muted); text-decoration: none;">← Back to portfolio</a>
+  </footer>
+
+</body>
+</html>
