@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Drone Project — Giovanni Sambo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-85QGGEVQND"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-85QGGEVQND');
+  </script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0c0e12;
+      --bg2: #13161c;
+      --bg3: #1a1e26;
+      --accent: #c8a96e;
+      --accent2: #7eb8d4;
+      --text: #e8e4dc;
+      --text-muted: #8a8680;
+      --border: rgba(200,169,110,0.15);
+      --mono: 'Space Mono', monospace;
+      --sans: 'DM Sans', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: 16px;
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.25rem 4rem;
+      background: rgba(12,14,18,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 0.5px solid var(--border);
+    }
+    .nav-logo {
+      font-family: var(--mono);
+      font-size: 13px;
+      color: var(--accent);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      text-decoration: none;
+    }
+    .back-link {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: #c8c4bc;
+      text-decoration: none;
+      letter-spacing: 0.05em;
+      transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--accent); }
+
+    /* ── HERO ── */
+    .hero {
+      height: 90vh;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: flex-end;
+      padding: 4rem;
+    }
+    .hero-img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(12,14,18,0.95) 0%, rgba(12,14,18,0.3) 60%, transparent 100%);
+    }
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 700px;
+    }
+    .hero-tag {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--accent);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+    .hero-title {
+      font-family: var(--mono);
+      font-size: clamp(2rem, 4vw, 3.5rem);
+      font-weight: 700;
+      line-height: 1.1;
+      color: var(--text);
+      margin-bottom: 1.25rem;
+    }
+    .hero-sub {
+      font-size: 1.05rem;
+      color: rgba(232,228,220,0.7);
+      max-width: 500px;
+      line-height: 1.7;
+    }
+
+    /* ── SECTIONS ── */
+    .section {
+      padding: 5rem 4rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .section-label {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.75rem;
+    }
+    .section-title {
+      font-family: var(--mono);
+      font-size: 1.6rem;
+      font-weight: 700;
+      margin-bottom: 1.75rem;
+      color: var(--text);
+    }
+    .section-text {
+      color: var(--text-muted);
+      font-size: 1rem;
+      line-height: 1.9;
+      max-width: 680px;
+    }
+    .section-text p { margin-bottom: 1.25rem; }
+    .section-text p:last-child { margin-bottom: 0; }
+    .section-text strong { color: var(--text); font-weight: 500; }
+
+    /* ── TWO COL ── */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+    }
+    .two-col.reverse { direction: rtl; }
+    .two-col.reverse > * { direction: ltr; }
+
+    /* ── IMAGES ── */
+    .img-full {
+      width: 100%;
+      display: block;
+      border: 0.5px solid var(--border);
+    }
+    .img-caption {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--text-muted);
+      letter-spacing: 0.08em;
+      margin-top: 0.6rem;
+      text-transform: uppercase;
+    }
+
+    /* ── PHOTO GRID ── */
+    .photo-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+    }
+    .photo-grid img {
+      width: 100%;
+      aspect-ratio: 1;
+      object-fit: cover;
+      display: block;
+      border: 0.5px solid var(--border);
+    }
+    .photo-grid img.wide {
+      grid-column: span 2;
+      aspect-ratio: 16/7;
+    }
+
+    /* ── SPECS ── */
+    .specs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1px;
+      border: 1px solid var(--border);
+      margin-top: 2rem;
+    }
+    .spec-item {
+      padding: 1.25rem 1.5rem;
+      background: var(--bg2);
+    }
+    .spec-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.4rem;
+    }
+    .spec-value {
+      font-size: 14px;
+      color: var(--text);
+    }
+
+    /* ── TIMELINE ── */
+    .timeline {
+      position: relative;
+      padding-left: 2rem;
+      margin-top: 2rem;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 0.5px;
+      background: var(--border);
+    }
+    .timeline-item {
+      position: relative;
+      padding-bottom: 2.5rem;
+    }
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -2rem;
+      top: 0.4rem;
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--accent);
+      transform: translateX(-3px);
+    }
+    .timeline-date {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.4rem;
+    }
+    .timeline-title {
+      font-family: var(--mono);
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 0.5rem;
+    }
+    .timeline-text {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.7;
+    }
+
+    /* ── DIVIDER ── */
+    .divider {
+      border: none;
+      border-top: 0.5px solid var(--border);
+      margin: 0 4rem;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 2rem 4rem;
+      border-top: 0.5px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    footer p {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 800px) {
+      nav { padding: 1rem 1.5rem; }
+      .hero { padding: 2rem; }
+      .section { padding: 3rem 1.5rem; }
+      .divider { margin: 0 1.5rem; }
+      .two-col { grid-template-columns: 1fr; gap: 2rem; }
+      .two-col.reverse { direction: ltr; }
+      footer { padding: 1.5rem; flex-direction: column; gap: 0.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="portfolio.html" class="nav-logo">← G. Sambo</a>
+    <a href="portfolio.html" class="back-link">Back to portfolio</a>
+  </nav>
+
+  <!-- HERO -->
+  <div class="hero">
+    <img src="../images/drone_1.jpeg" alt="Drone with LEDs" class="hero-img" />
+    <div class="hero-content">
+      <p class="hero-tag">High School Project · 2019–2020 · Where it all started</p>
+      <h1 class="hero-title">RexFlo APR —<br>Building a Drone<br>from Scratch</h1>
+      <p class="hero-sub">What started as a lockdown experiment turned into a full engineering project — and the reason I chose aerospace.</p>
+    </div>
+  </div>
+
+  <!-- SECTION 1 — HOW IT STARTED -->
+  <section class="section">
+    <div class="two-col">
+      <div>
+        <p class="section-label">The origin</p>
+        <h2 class="section-title">Lockdown, 2020.<br>A pile of parts<br>and no instructions.</h2>
+        <div class="section-text">
+          <p>
+            It started during the COVID lockdown. I was 18, stuck at home, and looking for something to do with my hands. I'd always been curious about how things fly — not just the theory, but the actual mechanics of it.
+          </p>
+          <p>
+            I ordered a carbon fiber frame, four brushless motors, ESCs, a flight controller, and a LiPo battery. No kit, no step-by-step guide. Just components, a soldering iron, and a lot of YouTube videos.
+          </p>
+          <p>
+            The first time it lifted off the ground — wobbly, barely controllable — I knew I wanted to study aerospace engineering.
+          </p>
+        </div>
+      </div>
+      <div>
+        <img src="../images/drone_3_incostruzione.jpeg" alt="Drone under construction" class="img-full" />
+        <p class="img-caption">Early assembly stage — flight controller not yet mounted</p>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- SECTION 2 — THE BUILD -->
+  <section class="section">
+    <p class="section-label">The build</p>
+    <h2 class="section-title">Every component chosen,<br>wired, and calibrated by hand.</h2>
+    <div class="two-col reverse" style="margin-top: 2rem;">
+      <div>
+        <div class="photo-grid">
+          <img src="../images/drone_2.jpeg" alt="Drone top view" class="wide" />
+          <img src="../images/drone_4_led.jpeg" alt="Drone with LEDs on" />
+          <img src="../images/drone-maturita.jpeg" alt="Drone components" />
+        </div>
+      </div>
+      <div>
+        <div class="section-text">
+          <p>
+            The frame is made of <strong>carbon fiber</strong> — lightweight and rigid, the same material used in aircraft structures. Four <strong>brushless outrunner motors</strong> drive the propellers, controlled individually by ESCs (Electronic Speed Controllers) that regulate RPM in real time.
+          </p>
+          <p>
+            The brain of the drone is a <strong>Naza flight controller</strong> — an IMU-based autopilot that reads gyroscopes, accelerometers, barometers, and GPS to keep the drone stable in the air, even in wind.
+          </p>
+          <p>
+            Later I added a custom <strong>LED lighting circuit</strong> for night flights and orientation — something I designed and soldered myself.
+          </p>
+        </div>
+        <div class="specs-grid">
+          <div class="spec-item">
+            <p class="spec-label">Frame</p>
+            <p class="spec-value">Carbon fiber quadcopter</p>
+          </div>
+          <div class="spec-item">
+            <p class="spec-label">Motors</p>
+            <p class="spec-value">Brushless outrunner × 4</p>
+          </div>
+          <div class="spec-item">
+            <p class="spec-label">Flight controller</p>
+            <p class="spec-value">DJI Naza + GPS</p>
+          </div>
+          <div class="spec-item">
+            <p class="spec-label">Battery</p>
+            <p class="spec-value">LiPo 3S</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- SECTION 3 — MATURITÀ -->
+  <section class="section">
+    <div class="two-col">
+      <div>
+        <p class="section-label">Graduation day</p>
+        <h2 class="section-title">The drone flew at<br>my final exam.</h2>
+        <div class="section-text">
+          <p>
+            For my <em>Esame di Maturità</em> — the Italian high school final exam — I presented the drone as my main project. The technical part covered brushless motor theory, flight controller principles, and the electromagnetic physics behind how a motor converts current into rotation.
+          </p>
+          <p>
+            The presentation included a live demonstration: I flew the drone outside the school building right after the exam. That photo — me with the controller, drone hovering in front of the <em>Liceo Berto</em> sign — is one I'll keep forever.
+          </p>
+        </div>
+      </div>
+      <div>
+        <img src="../images/drone_7_graduation.jpeg" alt="Giovanni flying drone at graduation" class="img-full" />
+        <p class="img-caption">Outside Liceo Statale G. Berto — graduation day, June 2020</p>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- SECTION 4 — EVOLUTION -->
+  <section class="section">
+    <p class="section-label">What came next</p>
+    <h2 class="section-title">From stable hover<br>to first-person view.</h2>
+
+    <div class="timeline">
+      <div class="timeline-item">
+        <p class="timeline-date">Version 1 — 2019</p>
+        <p class="timeline-title">Base configuration</p>
+        <p class="timeline-text">Basic quadcopter with GPS hold and altitude control. Carbon frame, Naza FC, red propellers. First flights were shaky — learning to tune PID controllers by trial and error.</p>
+      </div>
+      <div class="timeline-item">
+        <p class="timeline-date">Version 2 — 2020</p>
+        <p class="timeline-title">LED circuit + camera mount</p>
+        <p class="timeline-text">Added a custom LED lighting system soldered onto the frame for night flights and visual orientation. Mounted a GoPro for aerial footage.</p>
+      </div>
+      <div class="timeline-item">
+        <p class="timeline-date">Version 3 — 2020</p>
+        <p class="timeline-title">FPV conversion</p>
+        <p class="timeline-text">The most exciting upgrade: a new lighter frame, FPV camera transmitting live video, and a pair of FPV goggles. Flying from a first-person perspective completely changes the experience — you're not watching the drone, you <em>are</em> the drone.</p>
+      </div>
+    </div>
+
+    <div class="photo-grid" style="margin-top: 2.5rem;">
+      <img src="../images/drone_5.jpeg" alt="Drone version 2" />
+      <img src="../images/drone_6_fpv.jpeg" alt="FPV setup with goggles" />
+    </div>
+    <p class="img-caption" style="margin-top: 0.6rem;">Left: intermediate build with yellow propellers — Right: FPV setup with video goggles</p>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- FOOTER -->
+  <footer>
+    <p>© 2025 Giovanni Sambo</p>
+    <a href="portfolio.html" style="font-family: var(--mono); font-size: 11px; color: var(--text-muted); text-decoration: none;">← Back to portfolio</a>
+  </footer>
+
+</body>
+</html>
