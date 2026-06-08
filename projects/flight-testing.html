@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Flight Testing — Pipistrel | Giovanni Sambo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-85QGGEVQND"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-85QGGEVQND');
+  </script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0c0e12;
+      --bg2: #13161c;
+      --bg3: #1a1e26;
+      --accent: #c8a96e;
+      --text: #e8e4dc;
+      --text-muted: #8a8680;
+      --border: rgba(200,169,110,0.15);
+      --mono: 'Space Mono', monospace;
+      --sans: 'DM Sans', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: 16px;
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.25rem 4rem;
+      background: rgba(12,14,18,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 0.5px solid var(--border);
+    }
+    .nav-logo {
+      font-family: var(--mono);
+      font-size: 13px;
+      color: var(--accent);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      text-decoration: none;
+    }
+    .back-link {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: #c8c4bc;
+      text-decoration: none;
+      letter-spacing: 0.05em;
+      transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--accent); }
+
+    /* HERO */
+    .hero {
+      height: 90vh;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: flex-end;
+      padding: 4rem;
+    }
+    .hero-img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(12,14,18,0.95) 0%, rgba(12,14,18,0.3) 60%, transparent 100%);
+    }
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 700px;
+    }
+    .hero-tag {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--accent);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+    .hero-title {
+      font-family: var(--mono);
+      font-size: clamp(2rem, 4vw, 3.5rem);
+      font-weight: 700;
+      line-height: 1.1;
+      color: var(--text);
+      margin-bottom: 1.25rem;
+    }
+    .hero-sub {
+      font-size: 1.05rem;
+      color: rgba(232,228,220,0.7);
+      max-width: 540px;
+      line-height: 1.7;
+    }
+
+    /* SECTIONS */
+    .section {
+      padding: 5rem 4rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .section-label {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.75rem;
+    }
+    .section-title {
+      font-family: var(--mono);
+      font-size: 1.6rem;
+      font-weight: 700;
+      margin-bottom: 1.75rem;
+      color: var(--text);
+    }
+    .section-text {
+      color: var(--text-muted);
+      font-size: 1rem;
+      line-height: 1.9;
+      max-width: 680px;
+    }
+    .section-text p { margin-bottom: 1.25rem; }
+    .section-text p:last-child { margin-bottom: 0; }
+    .section-text strong { color: var(--text); font-weight: 500; }
+
+    /* TWO COL */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+    }
+
+    /* IMAGES */
+    .img-full {
+      width: 100%;
+      display: block;
+      border: 0.5px solid var(--border);
+    }
+    .img-caption {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--text-muted);
+      letter-spacing: 0.08em;
+      margin-top: 0.6rem;
+      text-transform: uppercase;
+    }
+
+    /* SPECS GRID */
+    .specs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 1px;
+      border: 1px solid var(--border);
+      margin-top: 3rem;
+    }
+    .spec-item {
+      padding: 1.25rem 1.5rem;
+      background: var(--bg2);
+    }
+    .spec-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.4rem;
+    }
+    .spec-value {
+      font-size: 13px;
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    /* OBJECTIVES LIST */
+    .obj-list {
+      list-style: none;
+      margin-top: 1.5rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      border: 1px solid var(--border);
+    }
+    .obj-list li {
+      padding: 1.25rem 1.5rem;
+      background: var(--bg2);
+      font-size: 14px;
+      color: var(--text-muted);
+      display: flex;
+      gap: 0.75rem;
+      align-items: flex-start;
+      line-height: 1.6;
+    }
+    .obj-list li::before {
+      content: '—';
+      color: var(--accent);
+      font-family: var(--mono);
+      font-size: 10px;
+      flex-shrink: 0;
+      margin-top: 0.3rem;
+    }
+    .obj-list li strong { color: var(--text); font-weight: 500; }
+
+    /* PHOTO GRID */
+    .photo-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+      margin-top: 2rem;
+    }
+    .photo-grid img {
+      width: 100%;
+      object-fit: cover;
+      display: block;
+      border: 0.5px solid var(--border);
+    }
+    .photo-grid img.wide {
+      grid-column: span 2;
+      aspect-ratio: 16/7;
+    }
+    .photo-grid img.tall {
+      aspect-ratio: 3/4;
+    }
+    .photo-grid img.square {
+      aspect-ratio: 1;
+    }
+
+    /* AIRCRAFT CARDS */
+    .aircraft-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      border: 1px solid var(--border);
+      margin-top: 2rem;
+    }
+    .aircraft-card {
+      background: var(--bg2);
+      padding: 2rem;
+    }
+    .aircraft-name {
+      font-family: var(--mono);
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 0.4rem;
+    }
+    .aircraft-sub {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--accent);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+    .aircraft-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.7;
+    }
+
+    /* DIVIDER */
+    .divider {
+      border: none;
+      border-top: 0.5px solid var(--border);
+      margin: 0 4rem;
+    }
+
+    /* FOOTER */
+    footer {
+      padding: 2rem 4rem;
+      border-top: 0.5px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    footer p {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    @media (max-width: 800px) {
+      nav { padding: 1rem 1.5rem; }
+      .hero { padding: 2rem; }
+      .section { padding: 3rem 1.5rem; }
+      .divider { margin: 0 1.5rem; }
+      .two-col { grid-template-columns: 1fr; gap: 2rem; }
+      .obj-list { grid-template-columns: 1fr; }
+      .aircraft-grid { grid-template-columns: 1fr; }
+      footer { padding: 1.5rem; flex-direction: column; gap: 0.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="../portfolio.html" class="nav-logo">← G. Sambo</a>
+    <a href="../portfolio.html" class="back-link">Back to portfolio</a>
+  </nav>
+
+  <!-- HERO -->
+  <div class="hero">
+    <img src="../images/Pipistrel_flight.png" alt="Pipistrel flight" class="hero-img" />
+    <div class="hero-content">
+      <p class="hero-tag">Flight Testing · Politecnico di Milano × Pipistrel Italia · May 2025</p>
+      <h1 class="hero-title">Flight Testing —<br>Pipistrel Virus<br>SW121A & SW128</h1>
+      <p class="hero-sub">Experimental flight test campaign at Gorizia Airport: performance evaluation and longitudinal stability assessment of two light sport aircraft, one conventional and one fully electric.</p>
+    </div>
+  </div>
+
+  <!-- OVERVIEW -->
+  <section class="section">
+    <div class="two-col">
+      <div>
+        <p class="section-label">Overview</p>
+        <h2 class="section-title">Two aircraft.<br>One day. Eight missions.</h2>
+        <div class="section-text">
+          <p>
+            As part of the <strong>Sperimentazione in Volo</strong> course at Politecnico di Milano, our team conducted a full flight test campaign in collaboration with <strong>Pipistrel Italia</strong> at Gorizia Airport (LIPG).
+          </p>
+          <p>
+            The campaign involved two aircraft: the <strong>Virus SW121A "Explorer"</strong>, a conventional light sport aircraft powered by a Rotax 912 engine, and the <strong>Virus SW128 "Velis Electro"</strong>, its fully electric counterpart — one of the first type-certified electric aircraft in the world.
+          </p>
+          <p>
+            All eight flight missions were completed on May 29, 2025, under VFR conditions, with calm winds and excellent atmospheric conditions — ideal for flight testing. Each student acted as <strong>Flight Test Engineer (FTE)</strong> in the cockpit alongside a Pipistrel test pilot, leading the test sequence and managing data acquisition in real time. Each flight lasted approximately <strong>50–55 minutes</strong>.
+          </p>
+          <p>
+            The two aircraft flew simultaneously, with the airspace divided horizontally by the <strong>Isonzo river</strong>: the Explorer on the west side, the Velis Electro on the east side, within the Gorizia ATZ (Class G, radius 3 NM, ceiling FL50).
+          </p>
+        </div>
+      </div>
+      <div>
+        <img src="../images/pipistrel-team.jpeg" alt="Flight test team at Gorizia Airport" class="img-full" />
+        <p class="img-caption">Flight test team — Gorizia Airport, May 2025</p>
+      </div>
+    </div>
+
+    <div class="specs-grid">
+      <div class="spec-item">
+        <p class="spec-label">Location</p>
+        <p class="spec-value">Gorizia Airport (LIPG)</p>
+      </div>
+      <div class="spec-item">
+        <p class="spec-label">Date</p>
+        <p class="spec-value">May 29, 2025</p>
+      </div>
+      <div class="spec-item">
+        <p class="spec-label">Missions</p>
+        <p class="spec-value">8 flight missions</p>
+      </div>
+      <div class="spec-item">
+        <p class="spec-label">Flight duration</p>
+        <p class="spec-value">~50–55 min per aircraft</p>
+      </div>
+      <div class="spec-item">
+        <p class="spec-label">Aircraft</p>
+        <p class="spec-value">Virus SW121A + SW128</p>
+      </div>
+      <div class="spec-item">
+        <p class="spec-label">Conditions</p>
+        <p class="spec-value">VFR · calm wind · clear sky</p>
+      </div>
+      <div class="spec-item">
+        <p class="spec-label">Data acquisition</p>
+        <p class="spec-value">DEWESoftX + RTK GPS</p>
+      </div>
+      <div class="spec-item">
+        <p class="spec-label">Standards</p>
+        <p class="spec-value">ASTM F2245 · EASA CS-LSA</p>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- TEST OBJECTIVES -->
+  <section class="section">
+    <p class="section-label">Test objectives</p>
+    <h2 class="section-title">What we tested.</h2>
+    <div class="section-text">
+      <p>The campaign evaluated four specific performance and stability characteristics on both aircraft, following the CS-23 Amendment 4 Flight Test Guide methodology. Results were benchmarked against each aircraft's Pilot Operating Handbook (POH) and verified for compliance with CS-LSA certification criteria.</p>
+    </div>
+    <ul class="obj-list">
+      <li><strong>Take-off performance</strong> — ground roll and obstacle clearance distance, full throttle from standstill, event-marked at lift-off and 50 ft AGL</li>
+      <li><strong>Stall speed</strong> — flap (+1) configuration; 6 valid stalls per aircraft at 3 entry rates (0.5 / 1.0 / 1.5 kt/s), performed upwind and downwind to cancel wind effects</li>
+      <li><strong>Longitudinal dynamic stability</strong> — phugoid motion stick-free and stick-fixed; small pitch input, then aircraft released for 90s; damping assessed over 3–4 oscillation cycles</li>
+      <li><strong>Landing performance</strong> — flap (+2), stabilized approach, air distance and ground roll measured via DGPS event markers</li>
+    </ul>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- THE AIRCRAFT -->
+  <section class="section">
+    <p class="section-label">Test platforms</p>
+    <h2 class="section-title">Two aircraft,<br>two propulsion systems.</h2>
+    <div class="aircraft-grid">
+      <div class="aircraft-card">
+        <p class="aircraft-name">Virus SW121A — "Explorer"</p>
+        <p class="aircraft-sub">Conventional · Rotax 912 S3 · 73.5 kW</p>
+        <p class="aircraft-desc">Two-seat high-wing monoplane with carbon/glass/aramid composite structure, T-tail, tricycle gear, and constant-speed propeller. Equipped with Garmin G3X dual-display avionics and full dual controls. Certified for VFR day and night.</p>
+      </div>
+      <div class="aircraft-card">
+        <p class="aircraft-name">Virus SW128 — "Velis Electro"</p>
+        <p class="aircraft-sub">Electric · E-811 Motor · 57.6 kW · 20 kWh battery</p>
+        <p class="aircraft-desc">Same airframe family as the Explorer, but powered by a Pipistrel electric motor and a 345 VDC liquid-cooled battery system. One of the first type-certified electric aircraft in the world. VFR day only, with fixed-pitch three-blade composite propeller.</p>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- FLIGHT TRACK + INSTRUMENTATION -->
+  <section class="section">
+    <div class="two-col">
+      <div>
+        <p class="section-label">Data & Instrumentation</p>
+        <h2 class="section-title">From cockpit<br>to post-processing.</h2>
+        <div class="section-text">
+          <p>
+            Data acquisition combined native aircraft instrumentation with supplementary Flight Test Instrumentation (FTI): a high-precision <strong>RTK GPS</strong> for ground trajectory reconstruction, a <strong>DEWESoft DAS</strong> for synchronized digital recording, a DATA-BLOCK event marker for real-time test point annotation, and a GoPro cockpit camera.
+          </p>
+          <p>
+            Two items originally planned were not installed on the day — the stick force sensor and the control fixture for stick-fixed phugoid tests. Despite their absence, all test objectives were successfully completed and the data were fully valid for post-processing.
+          </p>
+          <p>
+            Atmospheric conditions were excellent: both flights were performed in the early morning under clear sky, with wind well within the CS-23 tolerances. Post-flight data reduction followed standardized correction methods (Kimberlin, USN FTM) accounting for wind, weight, and atmospheric conditions.
+          </p>
+          <p>
+            The GPS flight track shown here captures the full mission profile: take-off, test area maneuvers, and landing sequence at LIPG.
+          </p>
+        </div>
+      </div>
+      <div>
+        <img src="../images/flight-track.png" alt="GPS flight track at Gorizia Airport" class="img-full" />
+        <p class="img-caption">GPS flight track — Gorizia Airport (LIPG), Mission 1</p>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- PHOTOS -->
+  <section class="section">
+    <p class="section-label">Gallery</p>
+    <h2 class="section-title">On the ground<br>and in the air.</h2>
+    <div class="photo-grid">
+      <img src="../images/Pipistrel_flight.png" alt="Pipistrel in flight" class="wide" />
+      <img src="../images/pipistrel-team.jpeg" alt="Team photo" class="square" />
+      <img src="../images/pipistrel-stemma.jpeg" alt="Pipistrel" class="square" />
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>© 2025 Giovanni Sambo</p>
+    <a href="../portfolio.html" style="font-family: var(--mono); font-size: 11px; color: var(--text-muted); text-decoration: none;">← Back to portfolio</a>
+  </footer>
+
+</body>
+</html>
