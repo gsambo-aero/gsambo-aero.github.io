@@ -100,7 +100,7 @@
 
   <!-- HERO -->
   <div class="hero">
-    <img src="../images/turbina_eolica.png" alt="2.3 MW wind turbine design" class="hero-img" />
+    <img src="../images/turbina-eolica.png" alt="2.3 MW wind turbine design" class="hero-img" />
     <div class="hero-content">
       <p class="hero-tag">Aeroelastic Design · Cp-Lambda · BEM · Politecnico di Milano · A.A. 2024–2025</p>
       <h1 class="hero-title">Design of a<br>2.3 MW Class IA<br>Wind Turbine</h1>
@@ -127,7 +127,7 @@
         </div>
       </div>
       <div>
-        <img src="../images/turbina_eolica.png" alt="Final wind turbine configuration" class="img-full" />
+        <img src="../images/turbina-eolica.png" alt="Final wind turbine configuration" class="img-full" />
         <p class="img-caption">Final design — D = 97.66 m, 2.3 MW, IEC Class IA</p>
       </div>
     </div>
@@ -188,12 +188,23 @@
 
   <!-- DESIGN LOOP -->
   <section class="section">
-    <p class="section-label">Methodology</p>
-    <h2 class="section-title">An iterative loop<br>across three domains.</h2>
-    <div class="section-text">
-      <p>
-        The design process integrated aerodynamics, structures, and control in a single MATLAB-based environment. At each iteration, modifications were introduced whenever a constraint was violated, and the CoE was recomputed to guide the next step.
-      </p>
+    <div class="two-col" style="align-items:flex-start; margin-bottom: 3rem;">
+      <div>
+        <p class="section-label">Methodology</p>
+        <h2 class="section-title">An iterative loop<br>across three domains.</h2>
+        <div class="section-text">
+          <p>
+            The design process integrated aerodynamics, structures, and control in a single MATLAB-based environment. At each iteration, modifications were introduced whenever a constraint was violated, and the CoE was recomputed to guide the next step.
+          </p>
+          <p>
+            The diagram shows the full multidisciplinary design loop: from rotor geometry and wind field generation, through aerodynamic, structural, and control synthesis, to dynamic load computation and cost evaluation — all centred on the Cost of Energy as the single governing objective.
+          </p>
+        </div>
+      </div>
+      <div>
+        <img src="../images/turbina-eolica-workflow.png" alt="Multidisciplinary wind turbine design loop" class="img-full" />
+        <p class="img-caption">Cp-Lambda design framework — POLI-Wind lab, Politecnico di Milano</p>
+      </div>
     </div>
 
     <div class="timeline">
