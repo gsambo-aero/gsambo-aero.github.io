@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wind Turbine Design — Giovanni Sambo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-85QGGEVQND"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-85QGGEVQND');
+  </script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0c0e12; --bg2: #13161c; --bg3: #1a1e26;
+      --accent: #c8a96e; --text: #e8e4dc; --text-muted: #8a8680;
+      --border: rgba(200,169,110,0.15);
+      --mono: 'Space Mono', monospace; --sans: 'DM Sans', sans-serif;
+    }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: var(--sans); font-size: 16px; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 4rem; background: rgba(12,14,18,0.85); backdrop-filter: blur(12px); border-bottom: 0.5px solid var(--border); }
+    .nav-logo { font-family: var(--mono); font-size: 13px; color: var(--accent); letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none; }
+    .back-link { font-family: var(--mono); font-size: 12px; color: #c8c4bc; text-decoration: none; letter-spacing: 0.05em; transition: color 0.2s; }
+    .back-link:hover { color: var(--accent); }
+
+    .hero { height: 90vh; position: relative; overflow: hidden; display: flex; align-items: flex-end; padding: 4rem; }
+    .hero-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; }
+    .hero::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, rgba(12,14,18,0.95) 0%, rgba(12,14,18,0.4) 60%, transparent 100%); }
+    .hero-content { position: relative; z-index: 2; max-width: 700px; }
+    .hero-tag { font-family: var(--mono); font-size: 11px; color: var(--accent); letter-spacing: 0.18em; text-transform: uppercase; margin-bottom: 1rem; }
+    .hero-title { font-family: var(--mono); font-size: clamp(2rem, 4vw, 3.5rem); font-weight: 700; line-height: 1.1; color: var(--text); margin-bottom: 1.25rem; }
+    .hero-sub { font-size: 1.05rem; color: rgba(232,228,220,0.7); max-width: 540px; line-height: 1.7; }
+
+    .section { padding: 5rem 4rem; max-width: 1100px; margin: 0 auto; }
+    .section-label { font-family: var(--mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.75rem; }
+    .section-title { font-family: var(--mono); font-size: 1.6rem; font-weight: 700; margin-bottom: 1.75rem; color: var(--text); }
+    .section-text { color: var(--text-muted); font-size: 1rem; line-height: 1.9; max-width: 680px; }
+    .section-text p { margin-bottom: 1.25rem; }
+    .section-text p:last-child { margin-bottom: 0; }
+    .section-text strong { color: var(--text); font-weight: 500; }
+
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
+    .two-col.reverse { direction: rtl; }
+    .two-col.reverse > * { direction: ltr; }
+
+    .img-full { width: 100%; display: block; border: 0.5px solid var(--border); }
+    .img-caption { font-family: var(--mono); font-size: 10px; color: var(--text-muted); letter-spacing: 0.08em; margin-top: 0.6rem; text-transform: uppercase; }
+
+    .specs-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1px; border: 1px solid var(--border); margin-top: 3rem; }
+    .spec-item { padding: 1.25rem 1.5rem; background: var(--bg2); }
+    .spec-label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.4rem; }
+    .spec-value { font-size: 13px; color: var(--text); line-height: 1.5; }
+
+    .configs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; border: 1px solid var(--border); margin-top: 2rem; }
+    .config-item { padding: 1.5rem; background: var(--bg2); }
+    .config-name { font-family: var(--mono); font-size: 0.85rem; font-weight: 700; color: var(--text); margin-bottom: 0.3rem; }
+    .config-badge { font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.75rem; }
+    .config-desc { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+
+    .timeline { display: flex; flex-direction: column; gap: 0; border: 1px solid var(--border); margin-top: 2rem; }
+    .timeline-item { display: grid; grid-template-columns: 120px 1fr; gap: 0; border-bottom: 0.5px solid var(--border); }
+    .timeline-item:last-child { border-bottom: none; }
+    .timeline-step { padding: 1.25rem 1.5rem; background: var(--bg2); border-right: 0.5px solid var(--border); display: flex; align-items: center; }
+    .timeline-step span { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); }
+    .timeline-body { padding: 1.25rem 1.5rem; }
+    .timeline-title { font-family: var(--mono); font-size: 0.8rem; font-weight: 700; color: var(--text); margin-bottom: 0.3rem; }
+    .timeline-desc { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+
+    .divider { border: none; border-top: 0.5px solid var(--border); margin: 0 4rem; }
+    footer { padding: 2rem 4rem; border-top: 0.5px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+    footer p { font-family: var(--mono); font-size: 11px; color: var(--text-muted); }
+
+    @media (max-width: 800px) {
+      nav { padding: 1rem 1.5rem; }
+      .hero { padding: 2rem; }
+      .section { padding: 3rem 1.5rem; }
+      .divider { margin: 0 1.5rem; }
+      .two-col { grid-template-columns: 1fr; gap: 2rem; }
+      .two-col.reverse { direction: ltr; }
+      .configs-grid { grid-template-columns: 1fr; }
+      .timeline-item { grid-template-columns: 1fr; }
+      .timeline-step { border-right: none; border-bottom: 0.5px solid var(--border); }
+      footer { padding: 1.5rem; flex-direction: column; gap: 0.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="../portfolio.html" class="nav-logo">← G. Sambo</a>
+    <a href="../portfolio.html" class="back-link">Back to portfolio</a>
+  </nav>
+
+  <!-- HERO -->
+  <div class="hero">
+    <img src="../images/turbina_eolica.png" alt="2.3 MW wind turbine design" class="hero-img" />
+    <div class="hero-content">
+      <p class="hero-tag">Aeroelastic Design · Cp-Lambda · BEM · Politecnico di Milano · A.A. 2024–2025</p>
+      <h1 class="hero-title">Design of a<br>2.3 MW Class IA<br>Wind Turbine</h1>
+      <p class="hero-sub">Multidisciplinary aero-servo-elastic design of an onshore wind turbine, integrating aerodynamics, structures, and control within an iterative Cost of Energy minimisation loop.</p>
+    </div>
+  </div>
+
+  <!-- OVERVIEW -->
+  <section class="section">
+    <div class="two-col">
+      <div>
+        <p class="section-label">Overview</p>
+        <h2 class="section-title">One metric<br>to rule them all.</h2>
+        <div class="section-text">
+          <p>
+            A 2.3 MW IEC Class IA wind turbine — targeting sites with a mean wind speed of 10 m/s and turbulence intensity of ~0.16 at 15 m/s — was designed from a market-survey baseline with a single objective: <strong>minimise the Cost of Energy (CoE)</strong>.
+          </p>
+          <p>
+            The CoE formulation ties together annual energy production, capital cost, and operating expenses into a single economic metric. Every design choice — from blade chord to spar cap thickness — was evaluated against its effect on this number.
+          </p>
+          <p>
+            Starting from a 93 m reference rotor, an iterative multidisciplinary loop explored chord variations, structural lightweighting, and rotor scaling. The final configuration — a <strong>97.66 m diameter rotor with +5% chord</strong> — achieved the lowest CoE among all tested designs while satisfying all aeroelastic and structural constraints.
+          </p>
+        </div>
+      </div>
+      <div>
+        <img src="../images/turbina_eolica.png" alt="Final wind turbine configuration" class="img-full" />
+        <p class="img-caption">Final design — D = 97.66 m, 2.3 MW, IEC Class IA</p>
+      </div>
+    </div>
+
+    <div class="specs-grid">
+      <div class="spec-item">
+        <p class="spec-label">Rated power</p>
+        <p class="spec-value">2.3 MW</p>
+      </div>
+      <div class="spec-item">
+        <p class="spec-label">IEC Class</p>
+        <p class="spec-value">Class IA — 10 m/s mean wind</p>
+      </div>
+      <div class="spec-item">
+        <p class="spec-label">Rotor diameter</p>
+        <p class="spec-value">97.66 m (final)</p>
+      </div>
+      <div class="spec-item">
+        <p class="spec-label">Hub height</p>
+        <p class="spec-value">80 m</p>
+      </div>
+      <div class="spec-item">
+        <p class="spec-label">Aeroelastic solver</p>
+        <p class="spec-value">Cp-Lambda (BEM-based)</p>
+      </div>
+      <div class="spec-item">
+        <p class="spec-label">Structural analysis</p>
+        <p class="spec-value">BECAS · RotorCS</p>
+      </div>
+      <div class="spec-item">
+        <p class="spec-label">Wind input</p>
+        <p class="spec-value">TurbSim — IEC 61400 DLCs</p>
+      </div>
+      <div class="spec-item">
+        <p class="spec-label">Control strategy</p>
+        <p class="spec-value">PID pitch + Hermite LUT torque</p>
+      </div>
+      <div class="spec-item">
+        <p class="spec-label">Annual energy production</p>
+        <p class="spec-value">12.0 GWh/yr</p>
+      </div>
+      <div class="spec-item">
+        <p class="spec-label">Cost of Energy</p>
+        <p class="spec-value">35.07 $/MWh</p>
+      </div>
+      <div class="spec-item">
+        <p class="spec-label">Blade mass</p>
+        <p class="spec-value">6 705 kg</p>
+      </div>
+      <div class="spec-item">
+        <p class="spec-label">Design environment</p>
+        <p class="spec-value">POLI-Wind lab — PoliMi</p>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- DESIGN LOOP -->
+  <section class="section">
+    <p class="section-label">Methodology</p>
+    <h2 class="section-title">An iterative loop<br>across three domains.</h2>
+    <div class="section-text">
+      <p>
+        The design process integrated aerodynamics, structures, and control in a single MATLAB-based environment. At each iteration, modifications were introduced whenever a constraint was violated, and the CoE was recomputed to guide the next step.
+      </p>
+    </div>
+
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-step"><span>Step 01</span></div>
+        <div class="timeline-body">
+          <p class="timeline-title">Market survey & baseline selection</p>
+          <p class="timeline-desc">Survey of commercial 2–2.5 MW turbines identified the Siemens SWT-2.3-93 as the reference. A 93 m rotor configuration was adopted as the starting point, with hub, tower, and geometric parameters consistent with academic baselines.</p>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-step"><span>Step 02</span></div>
+        <div class="timeline-body">
+          <p class="timeline-title">Control system design & LUT sensitivity</p>
+          <p class="timeline-desc">A PID pitch controller with gain scheduling was tuned to handle the Region 2.5 transition imposed by the 74 m/s tip-speed limit. Three torque ramp profiles were compared — linear, piecewise-linear, and Hermite polynomial. The Hermite ramp delivered the best AEP and was adopted for all subsequent iterations.</p>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-step"><span>Step 03</span></div>
+        <div class="timeline-body">
+          <p class="timeline-title">Structural lightweighting</p>
+          <p class="timeline-desc">With the baseline control locked, the blade structural layup was progressively lightened until the flap-wise frequency and tip displacement constraints became active. This yielded the lightest feasible 93 m design.</p>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-step"><span>Step 04</span></div>
+        <div class="timeline-body">
+          <p class="timeline-title">Chord sensitivity study (±5%)</p>
+          <p class="timeline-desc">Blade chord was varied by ±5% at fixed radius, with structural updates at each step to maintain compliance. The +5% chord configuration produced the highest power coefficient and lowest CoE among the 93 m variants, despite slightly higher loads.</p>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-step"><span>Step 05</span></div>
+        <div class="timeline-body">
+          <p class="timeline-title">PID vs LQR control comparison</p>
+          <p class="timeline-desc">A Linear Quadratic Regulator (LQR) was implemented on the best-chord configuration. Despite marginal power improvement, the LQR proved too aggressive, causing the blade tip displacement constraint to be violated even after stiffness increases. PID was retained.</p>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-step"><span>Step 06</span></div>
+        <div class="timeline-body">
+          <p class="timeline-title">Rotor radius scaling (±5%) → final design</p>
+          <p class="timeline-desc">The +5% chord distribution was scaled to D = 88.4 m and D = 97.66 m. The larger rotor increased swept area and AEP, more than compensating for the structural cost increase. The 97.66 m configuration achieved the lowest CoE of all tested designs and was selected as the final solution.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- STRUCTURAL DESIGN -->
+  <section class="section">
+    <div class="two-col reverse">
+      <div>
+        <div class="configs-grid" style="margin-top:0;">
+          <div class="config-item">
+            <p class="config-name">Spar caps (PS/SS)</p>
+            <p class="config-badge">Rebalanced</p>
+            <p class="config-desc">Pressure side (tension-dominated): thickness reduced. Suction side (compression-dominated): thickness increased to raise flap-wise stiffness and meet frequency constraints.</p>
+          </div>
+          <div class="config-item">
+            <p class="config-name">LE/TE reinforcements</p>
+            <p class="config-badge">−45–50% laminate</p>
+            <p class="config-desc">Width reduced by 3%, laminate thickness cut by ~45–50%. Lowers edge-wise stiffness to satisfy frequency separation while saving mass.</p>
+          </div>
+          <div class="config-item">
+            <p class="config-name">Shell & shear webs</p>
+            <p class="config-badge">Mid/outer span thinned</p>
+            <p class="config-desc">Substantial material removal where loads are lower. Spanwise taper preserved: higher thickness inboard, reducing toward the tip following chord reduction.</p>
+          </div>
+          <div class="config-item">
+            <p class="config-name">Stress margins</p>
+            <p class="config-badge">−49% / −34%</p>
+            <p class="config-desc">Critical section at η ≈ 0.52 span fraction. Tensile margin: −49% vs allowable. Compressive margin: −34% vs allowable. Both well within limits.</p>
+          </div>
+        </div>
+      </div>
+      <div>
+        <p class="section-label">Structural design</p>
+        <h2 class="section-title">Stiffness where<br>it counts.</h2>
+        <div class="section-text">
+          <p>
+            The structural layout was redesigned to satisfy two competing frequency constraints simultaneously: the first <strong>flap-wise frequency</strong> must stay above 1.2× the 3P excitation, while the <strong>edge-wise frequency</strong> must exceed 1.15× the flap-wise value.
+          </p>
+          <p>
+            The approach decoupled pressure-side and suction-side spar caps, exploiting the asymmetric stress allowables to save mass on the tension side while strengthening the compression side. LE/TE reinforcements were thinned to selectively reduce edge-wise stiffness without affecting the adhesive joint geometry.
+          </p>
+          <p>
+            The resulting blade mass — <strong>6 705 kg</strong> — is lower than the baseline despite the larger rotor, with all constraints satisfied and comfortable stress margins.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- RESULTS -->
+  <section class="section">
+    <p class="section-label">Results</p>
+    <h2 class="section-title">Eight configurations.<br>One optimal solution.</h2>
+    <div class="section-text">
+      <p>
+        The CoE evolution across all eight configurations tells a clear story: control optimisation brought a first step down from the initial baseline; structural lightweighting and chord increase added further increments; the radius increase to 97.66 m produced the decisive final reduction.
+      </p>
+      <p>
+        The final design achieves an <strong>AEP of 12.0 GWh/yr</strong> and a <strong>CoE of 35.07 $/MWh</strong> — a meaningful reduction from the 35.71 $/MWh baseline — while fully satisfying the flap-wise separation constraint (margin +1.51%), the tip displacement constraint (margin −2.5%), and leaving comfortable edge-wise and stress margins.
+      </p>
+    </div>
+
+    <div class="configs-grid" style="margin-top:2.5rem;">
+      <div class="config-item">
+        <p class="config-name">Flap-wise frequency separation</p>
+        <p class="config-badge">Satisfied ✓ — margin +1.51%</p>
+        <p class="config-desc">First rotating flap-wise frequency: 0.8552 Hz. Required clearance from 3P excitation: ≥1.2×. Within the ±2% tolerance band specified in the design requirements.</p>
+      </div>
+      <div class="config-item">
+        <p class="config-name">Edge-wise frequency separation</p>
+        <p class="config-badge">Satisfied ✓ — margin −20.3%</p>
+        <p class="config-desc">First rotating edge-wise frequency: 1.1835 Hz. Required clearance from flap-wise: ≥1.15×. Constraint comfortably exceeded, confirming structural robustness.</p>
+      </div>
+      <div class="config-item">
+        <p class="config-name">Blade tip displacement</p>
+        <p class="config-badge">Satisfied ✓ — margin −2.5%</p>
+        <p class="config-desc">Maximum tip deflection across all DLCs: 5.963 m. Allowable limit: 70% of unloaded blade–tower clearance (8.74 m). Constraint met within the tolerance band.</p>
+      </div>
+      <div class="config-item">
+        <p class="config-name">Maximum tip speed</p>
+        <p class="config-badge">Satisfied ✓ — 74 m/s limit</p>
+        <p class="config-desc">Rated rotor speed constrained to 14.47 rpm by the noise/structural tip-speed limit. The Region 2.5 control strategy was specifically designed to handle this constraint smoothly.</p>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- TAKEAWAY -->
+  <section class="section">
+    <div class="two-col">
+      <div>
+        <p class="section-label">Takeaway</p>
+        <h2 class="section-title">Engineering<br>means trade-offs.</h2>
+        <div class="section-text">
+          <p>
+            The most instructive outcome of this project was not the final number, but the <strong>interaction between domains</strong>. A chord increase that improves aerodynamic efficiency also raises loads and shifts natural frequencies — requiring structural updates that partially negate the mass savings. A larger rotor increases AEP but also capital cost. None of these effects can be evaluated in isolation.
+          </p>
+          <p>
+            The PID vs LQR comparison was particularly revealing: a mathematically superior controller failed the design because it pushed structural loads beyond the admissible envelope. <strong>Optimality is always constrained.</strong>
+          </p>
+          <p>
+            The CoE framework proved its value as a single integrating metric that naturally penalises both under-performance and over-engineering — making it the right objective function for a real design problem.
+          </p>
+        </div>
+      </div>
+      <div>
+        <div class="specs-grid" style="margin-top:0; border:none;">
+          <div class="spec-item" style="border:0.5px solid var(--border);">
+            <p class="spec-label">Baseline CoE</p>
+            <p class="spec-value">35.71 $/MWh<br><span style="color:var(--text-muted);font-size:12px;">D = 93 m — starting point</span></p>
+          </div>
+          <div class="spec-item" style="border:0.5px solid var(--border);">
+            <p class="spec-label">Final CoE</p>
+            <p class="spec-value" style="color:var(--accent);">35.07 $/MWh<br><span style="color:var(--text-muted);font-size:12px;">D = 97.66 m — final design</span></p>
+          </div>
+          <div class="spec-item" style="border:0.5px solid var(--border);">
+            <p class="spec-label">Configurations tested</p>
+            <p class="spec-value">8<br><span style="color:var(--text-muted);font-size:12px;">Control · chord · radius</span></p>
+          </div>
+          <div class="spec-item" style="border:0.5px solid var(--border);">
+            <p class="spec-label">Design DLCs</p>
+            <p class="spec-value">5<br><span style="color:var(--text-muted);font-size:12px;">NTM · EOG · EWS · EWM</span></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>© 2025 Giovanni Sambo</p>
+    <a href="../portfolio.html" style="font-family: var(--mono); font-size: 11px; color: var(--text-muted); text-decoration: none;">← Back to portfolio</a>
+  </footer>
+
+</body>
+</html>
