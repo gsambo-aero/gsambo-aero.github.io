@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bus Aerodynamics — Giovanni Sambo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-85QGGEVQND"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-85QGGEVQND');
+  </script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0c0e12; --bg2: #13161c; --bg3: #1a1e26;
+      --accent: #c8a96e; --text: #e8e4dc; --text-muted: #8a8680;
+      --border: rgba(200,169,110,0.15);
+      --mono: 'Space Mono', monospace; --sans: 'DM Sans', sans-serif;
+    }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: var(--sans); font-size: 16px; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 4rem; background: rgba(12,14,18,0.85); backdrop-filter: blur(12px); border-bottom: 0.5px solid var(--border); }
+    .nav-logo { font-family: var(--mono); font-size: 13px; color: var(--accent); letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none; }
+    .back-link { font-family: var(--mono); font-size: 12px; color: #c8c4bc; text-decoration: none; letter-spacing: 0.05em; transition: color 0.2s; }
+    .back-link:hover { color: var(--accent); }
+
+    .hero { height: 90vh; position: relative; overflow: hidden; display: flex; align-items: flex-end; padding: 4rem; }
+    .hero-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; }
+    .hero::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, rgba(12,14,18,0.95) 0%, rgba(12,14,18,0.4) 60%, transparent 100%); }
+    .hero-content { position: relative; z-index: 2; max-width: 700px; }
+    .hero-tag { font-family: var(--mono); font-size: 11px; color: var(--accent); letter-spacing: 0.18em; text-transform: uppercase; margin-bottom: 1rem; }
+    .hero-title { font-family: var(--mono); font-size: clamp(2rem, 4vw, 3.5rem); font-weight: 700; line-height: 1.1; color: var(--text); margin-bottom: 1.25rem; }
+    .hero-sub { font-size: 1.05rem; color: rgba(232,228,220,0.7); max-width: 540px; line-height: 1.7; }
+
+    .section { padding: 5rem 4rem; max-width: 1100px; margin: 0 auto; }
+    .section-label { font-family: var(--mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.75rem; }
+    .section-title { font-family: var(--mono); font-size: 1.6rem; font-weight: 700; margin-bottom: 1.75rem; color: var(--text); }
+    .section-text { color: var(--text-muted); font-size: 1rem; line-height: 1.9; max-width: 680px; }
+    .section-text p { margin-bottom: 1.25rem; }
+    .section-text p:last-child { margin-bottom: 0; }
+    .section-text strong { color: var(--text); font-weight: 500; }
+
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
+    .two-col.reverse { direction: rtl; }
+    .two-col.reverse > * { direction: ltr; }
+
+    .img-full { width: 100%; display: block; border: 0.5px solid var(--border); }
+    .img-caption { font-family: var(--mono); font-size: 10px; color: var(--text-muted); letter-spacing: 0.08em; margin-top: 0.6rem; text-transform: uppercase; }
+
+    .specs-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1px; border: 1px solid var(--border); margin-top: 3rem; }
+    .spec-item { padding: 1.25rem 1.5rem; background: var(--bg2); }
+    .spec-label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.4rem; }
+    .spec-value { font-size: 13px; color: var(--text); line-height: 1.5; }
+
+    .configs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; border: 1px solid var(--border); margin-top: 2rem; }
+    .config-item { padding: 1.5rem; background: var(--bg2); }
+    .config-name { font-family: var(--mono); font-size: 0.85rem; font-weight: 700; color: var(--text); margin-bottom: 0.3rem; }
+    .config-delta { font-family: var(--mono); font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .config-delta.neg { color: #7eb8d4; }
+    .config-delta.pos { color: #e07070; }
+    .config-desc { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+
+    .photo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-top: 2rem; }
+    .photo-grid img { width: 100%; object-fit: cover; display: block; border: 0.5px solid var(--border); }
+    .photo-grid img.wide { grid-column: span 2; aspect-ratio: 16/7; object-fit: cover; }
+    .photo-grid img.square { aspect-ratio: 1; }
+    .photo-grid img.tall { aspect-ratio: 3/4; }
+
+    .divider { border: none; border-top: 0.5px solid var(--border); margin: 0 4rem; }
+    footer { padding: 2rem 4rem; border-top: 0.5px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+    footer p { font-family: var(--mono); font-size: 11px; color: var(--text-muted); }
+
+    @media (max-width: 800px) {
+      nav { padding: 1rem 1.5rem; }
+      .hero { padding: 2rem; }
+      .section { padding: 3rem 1.5rem; }
+      .divider { margin: 0 1.5rem; }
+      .two-col { grid-template-columns: 1fr; gap: 2rem; }
+      .two-col.reverse { direction: ltr; }
+      .configs-grid { grid-template-columns: 1fr; }
+      footer { padding: 1.5rem; flex-direction: column; gap: 0.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="../portfolio.html" class="nav-logo">← G. Sambo</a>
+    <a href="../portfolio.html" class="back-link">Back to portfolio</a>
+  </nav>
+
+  <!-- HERO -->
+  <div class="hero">
+    <img src="../images/Airbus_testsectionconbus.jpeg" alt="Bus model in wind tunnel test section" class="hero-img" />
+    <div class="hero-content">
+      <p class="hero-tag">CFD · OpenFOAM · Wind Tunnel · Politecnico di Milano · A.A. 2024–2025</p>
+      <h1 class="hero-title">Aerodynamic Drag<br>Reduction —<br>Travel Bus</h1>
+      <p class="hero-sub">Wind tunnel testing and OpenFOAM CFD simulations on a 1:20 scale Mercedes-Benz Tourismo model — exploring side skirts, rear tapering, and their combined effect on drag reduction.</p>
+    </div>
+  </div>
+
+  <!-- OVERVIEW -->
+  <section class="section">
+    <div class="two-col">
+      <div>
+        <p class="section-label">Overview</p>
+        <h2 class="section-title">From wind tunnel<br>to open road.</h2>
+        <div class="section-text">
+          <p>
+            Long-distance coaches are characterized by large frontal areas and bluff-body geometries that produce significant aerodynamic drag. At highway cruising speeds (~100 km/h), drag can account for over <strong>50% of total engine power</strong> — making it a prime target for efficiency improvements.
+          </p>
+          <p>
+            This project analyzed the aerodynamic drag of a long-distance coach inspired by the <strong>Mercedes-Benz Tourismo</strong>, modeled in SolidWorks and scaled to 1:20 for wind tunnel testing. The experimental campaign was used to validate the <strong>OpenFOAM CFD setup</strong>, after which all design modifications were tested numerically.
+          </p>
+          <p>
+            Four configurations were evaluated: side mirrors only (baseline), addition of side skirts, rear tapering, and a full combined configuration.
+          </p>
+        </div>
+      </div>
+      <div>
+        <img src="../images/Airbus_windtunnel.jpeg" alt="Wind tunnel setup" class="img-full" />
+        <p class="img-caption">Open-circuit wind tunnel — PoliMi Aerodynamics Lab</p>
+        <img src="../images/Airbus_configurazionefull.png" alt="Full configuration 3D model" class="img-full" style="margin-top:0.75rem;" />
+        <p class="img-caption">Full configuration — mirrors + side skirts + rear tapering</p>
+      </div>
+    </div>
+
+    <div class="specs-grid">
+      <div class="spec-item">
+        <p class="spec-label">Solver</p>
+        <p class="spec-value">OpenFOAM — simpleFoam</p>
+      </div>
+      <div class="spec-item">
+        <p class="spec-label">Turbulence model</p>
+        <p class="spec-value">k-ω SST (RANS)</p>
+      </div>
+      <div class="spec-item">
+        <p class="spec-label">Flow velocity</p>
+        <p class="spec-value">18.2 m/s (tunnel) · 25 m/s (open air)</p>
+      </div>
+      <div class="spec-item">
+        <p class="spec-label">Model scale</p>
+        <p class="spec-value">1:20 — 3D printed</p>
+      </div>
+      <div class="spec-item">
+        <p class="spec-label">Reynolds number</p>
+        <p class="spec-value">Re ≈ 7.6 × 10⁵</p>
+      </div>
+      <div class="spec-item">
+        <p class="spec-label">Mesh cells</p>
+        <p class="spec-value">~9.1 million (open-air)</p>
+      </div>
+      <div class="spec-item">
+        <p class="spec-label">Blockage ratio</p>
+        <p class="spec-value">8.1% (wind tunnel)</p>
+      </div>
+      <div class="spec-item">
+        <p class="spec-label">Validation</p>
+        <p class="spec-value">CFD vs wind tunnel — excellent agreement</p>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- WIND TUNNEL -->
+  <section class="section">
+    <div class="two-col reverse">
+      <div>
+        <div class="photo-grid">
+          <img src="../images/Airbus_convergente.jpeg" alt="Wind tunnel convergent section" class="wide" />
+          <img src="../images/Airbus_team1.jpeg" alt="Team working on setup" class="square" />
+          <img src="../images/Airbus_team2.jpeg" alt="Team at data acquisition station" class="square" />
+        </div>
+      </div>
+      <div>
+        <p class="section-label">Experimental campaign</p>
+        <h2 class="section-title">Build, test,<br>validate.</h2>
+        <div class="section-text">
+          <p>
+            The 1:20 scale bus model was <strong>3D printed</strong> and installed in the open-circuit wind tunnel at Politecnico di Milano. A Pitot tube measured dynamic pressure to determine freestream velocity; a <strong>load cell</strong> measured longitudinal drag force for direct C_d computation.
+          </p>
+          <p>
+            Six consecutive acquisitions were performed at each test condition, sampling at <strong>125 Hz for ~40 seconds</strong>. A Reynolds independence study confirmed that above 10 m/s the drag coefficient becomes geometry-dominated — validating the use of wind tunnel data for CFD comparison regardless of exact Reynolds matching.
+          </p>
+          <p>
+            Wind tunnel and CFD results showed excellent agreement on drag coefficient, confirming the numerical setup before extending the analysis to open-air conditions.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- DRAG REDUCTION RESULTS -->
+  <section class="section">
+    <p class="section-label">Drag reduction analysis</p>
+    <h2 class="section-title">Four configurations.<br>One clear winner.</h2>
+    <div class="section-text">
+      <p>All modifications were evaluated in open-air conditions at 25 m/s using the validated CFD model. The baseline (mirrors only, C_d = 0.5052) served as reference. Results show that rear tapering is by far the most effective individual device, while the full configuration nearly recovers all the drag added by the mirrors.</p>
+    </div>
+
+    <div class="configs-grid">
+      <div class="config-item">
+        <p class="config-name">Mirrors only (baseline)</p>
+        <img src="../images/Airbus_base_influenza_specchietti_xz.png" alt="Flow field with mirrors" style="width:100%;margin:0.75rem 0;border:0.5px solid var(--border);" />
+        <p class="config-desc">Side mirrors are mandatory but aerodynamically costly. They generate local flow separation and vortices at the front corners, creating recirculation zones that increase parasitic drag.</p>
+      </div>
+      <div class="config-item">
+        <p class="config-name">Mirrors + Side skirts</p>
+        <p class="config-desc">Rear wheel arch covers block lateral inflow into wheel housings, reducing underbody turbulence and narrowing the wake. Modest individual effect but synergistic with other devices.</p>
+      </div>
+      <div class="config-item">
+        <p class="config-name">Mirrors + Rear tapering</p>
+        <img src="../images/Airbus_posteriore_streamlines_tapering.png" alt="Wake streamlines with rear tapering" style="width:100%;margin:0.75rem 0;border:0.5px solid var(--border);" />
+        <p class="config-desc">Most effective single modification. The tapered rear extension keeps the outer flow attached longer, collapses the recirculation bubble significantly, and reduces wake cross-section — delivering the largest individual drag reduction.</p>
+      </div>
+      <div class="config-item">
+        <p class="config-name">Full configuration</p>
+        <p class="config-desc">Combined mirrors + skirts + tapering. Nearly recovers all the drag added by mirrors, returning the drag coefficient close to the mirrorless baseline — confirming that the base shape was already well optimised.</p>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- CONCLUSIONS -->
+  <section class="section">
+    <div class="two-col">
+      <div>
+        <p class="section-label">Takeaway</p>
+        <h2 class="section-title">Small gains,<br>real impact.</h2>
+        <div class="section-text">
+          <p>
+            The base Mercedes-Benz Tourismo geometry was already aerodynamically competitive, with a rear chamfer acting as a passive diffuser. This left limited room for improvement — but the full configuration still delivered a significant drag reduction relative to the realistic mirrored baseline.
+          </p>
+          <p>
+            Knowing that every 2% reduction in drag translates to roughly <strong>1% fuel savings</strong>, even modest improvements have meaningful economic and environmental impact at scale — particularly relevant for electric buses where range is directly at stake.
+          </p>
+          <p>
+            Future work could extend the analysis to crosswind conditions, where fairings may show greater benefit, and explore active solutions such as digital mirrors or adaptive rear geometries.
+          </p>
+        </div>
+      </div>
+      <div>
+        <img src="../images/bus-windtunnel.jpeg" alt="Bus model wind tunnel testing" class="img-full" />
+        <p class="img-caption">Bus model mounted in test section — load cell measuring longitudinal drag force</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>© 2025 Giovanni Sambo</p>
+    <a href="../portfolio.html" style="font-family: var(--mono); font-size: 11px; color: var(--text-muted); text-decoration: none;">← Back to portfolio</a>
+  </footer>
+
+</body>
+</html>
