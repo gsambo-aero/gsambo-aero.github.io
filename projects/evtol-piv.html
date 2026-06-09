@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Experimental Fluid Dynamics — Giovanni Sambo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-85QGGEVQND"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-85QGGEVQND');
+  </script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0c0e12; --bg2: #13161c; --bg3: #1a1e26;
+      --accent: #c8a96e; --text: #e8e4dc; --text-muted: #8a8680;
+      --border: rgba(200,169,110,0.15);
+      --mono: 'Space Mono', monospace; --sans: 'DM Sans', sans-serif;
+    }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: var(--sans); font-size: 16px; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 4rem; background: rgba(12,14,18,0.85); backdrop-filter: blur(12px); border-bottom: 0.5px solid var(--border); }
+    .nav-logo { font-family: var(--mono); font-size: 13px; color: var(--accent); letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none; }
+    .back-link { font-family: var(--mono); font-size: 12px; color: #c8c4bc; text-decoration: none; letter-spacing: 0.05em; transition: color 0.2s; }
+    .back-link:hover { color: var(--accent); }
+
+    .hero { height: 90vh; position: relative; overflow: hidden; display: flex; align-items: flex-end; padding: 4rem; }
+    .hero-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; }
+    .hero::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, rgba(12,14,18,0.95) 0%, rgba(12,14,18,0.4) 60%, transparent 100%); }
+    .hero-content { position: relative; z-index: 2; max-width: 700px; }
+    .hero-tag { font-family: var(--mono); font-size: 11px; color: var(--accent); letter-spacing: 0.18em; text-transform: uppercase; margin-bottom: 1rem; }
+    .hero-title { font-family: var(--mono); font-size: clamp(2rem, 4vw, 3.5rem); font-weight: 700; line-height: 1.1; color: var(--text); margin-bottom: 1.25rem; }
+    .hero-sub { font-size: 1.05rem; color: rgba(232,228,220,0.7); max-width: 540px; line-height: 1.7; }
+
+    .section { padding: 5rem 4rem; max-width: 1100px; margin: 0 auto; }
+    .section-label { font-family: var(--mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.75rem; }
+    .section-title { font-family: var(--mono); font-size: 1.6rem; font-weight: 700; margin-bottom: 1.75rem; color: var(--text); }
+    .section-text { color: var(--text-muted); font-size: 1rem; line-height: 1.9; max-width: 680px; }
+    .section-text p { margin-bottom: 1.25rem; }
+    .section-text p:last-child { margin-bottom: 0; }
+    .section-text strong { color: var(--text); font-weight: 500; }
+
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
+    .two-col.reverse { direction: rtl; }
+    .two-col.reverse > * { direction: ltr; }
+    .two-col.top { align-items: flex-start; }
+
+    .img-full { width: 100%; display: block; border: 0.5px solid var(--border); }
+    .img-caption { font-family: var(--mono); font-size: 10px; color: var(--text-muted); letter-spacing: 0.08em; margin-top: 0.6rem; text-transform: uppercase; }
+
+    .modules-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; border: 1px solid var(--border); margin-top: 3rem; }
+    .module-item { padding: 1.5rem; background: var(--bg2); }
+    .module-num { font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.5rem; }
+    .module-title { font-family: var(--mono); font-size: 0.85rem; font-weight: 700; color: var(--text); margin-bottom: 0.5rem; }
+    .module-desc { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+
+    .divider { border: none; border-top: 0.5px solid var(--border); margin: 0 4rem; }
+    footer { padding: 2rem 4rem; border-top: 0.5px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+    footer p { font-family: var(--mono); font-size: 11px; color: var(--text-muted); }
+
+    @media (max-width: 800px) {
+      nav { padding: 1rem 1.5rem; }
+      .hero { padding: 2rem; }
+      .section { padding: 3rem 1.5rem; }
+      .divider { margin: 0 1.5rem; }
+      .two-col { grid-template-columns: 1fr; gap: 2rem; }
+      .two-col.reverse { direction: ltr; }
+      .modules-grid { grid-template-columns: 1fr; }
+      footer { padding: 1.5rem; flex-direction: column; gap: 0.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="../portfolio.html" class="nav-logo">← G. Sambo</a>
+    <a href="../portfolio.html" class="back-link">Back to portfolio</a>
+  </nav>
+
+  <!-- HERO -->
+  <div class="hero">
+    <img src="../images/windtunnel-lab1e2.png" alt="PoliMi closed-circuit wind tunnel" class="hero-img" />
+    <div class="hero-content">
+      <p class="hero-tag">Wind Tunnel · Force Balance · PIV · Hot-Wire · Politecnico di Milano · A.A. 2024–2025</p>
+      <h1 class="hero-title">Experimental<br>Fluid Dynamics<br>Labs</h1>
+      <p class="hero-sub">Three wind tunnel laboratory sessions: aerodynamic force measurements on a NACA 0015, surface pressure and wake analysis on a NACA 23012, and PIV investigation of vortex dynamics in a side-by-side eVTOL rotor configuration.</p>
+    </div>
+  </div>
+
+  <!-- OVERVIEW -->
+  <section class="section">
+    <div class="two-col">
+      <div>
+        <p class="section-label">Overview</p>
+        <h2 class="section-title">Three labs,<br>one progression.</h2>
+        <div class="section-text">
+          <p>
+            The Experimental Fluid Dynamics course at Politecnico di Milano builds measurement skills progressively: from integrated force acquisition, to surface-resolved pressure fields and wake traverses, to full-field optical velocimetry. Each session required instrument calibration, data acquisition, MATLAB post-processing, and comparison against XFOIL predictions.
+          </p>
+          <p>
+            The same closed-circuit wind tunnel at the Department of Aerospace Sciences was used throughout, with different instrumentation setups for each objective. The three sessions form a coherent journey from <strong>global aerodynamic coefficients</strong> to <strong>spatially-resolved flow structures</strong>.
+          </p>
+        </div>
+      </div>
+      <div>
+        <img src="../images/windtunnel-lab1e2.png" alt="PoliMi closed-circuit wind tunnel" class="img-full" />
+        <p class="img-caption">PoliMi closed-circuit low-speed wind tunnel — test section</p>
+      </div>
+    </div>
+
+    <div class="modules-grid">
+      <div class="module-item">
+        <p class="module-num">Lab 01</p>
+        <p class="module-title">Aerodynamic Forces — NACA 0015</p>
+        <p class="module-desc">6-axis Futek force balance, calibration matrix, CL / CD / CM curves vs angle of attack, stall identification, drag polar, XFOIL validation.</p>
+      </div>
+      <div class="module-item">
+        <p class="module-num">Lab 02</p>
+        <p class="module-title">Pressure & Wake — NACA 23012</p>
+        <p class="module-desc">16 surface pressure taps, Cp distribution, three CL integration methods, hot-wire wake traverse, drag from momentum deficit, spectral analysis of velocity fluctuations.</p>
+      </div>
+      <div class="module-item">
+        <p class="module-num">Lab 03</p>
+        <p class="module-title">PIV — eVTOL Rotor Interaction</p>
+        <p class="module-desc">Particle Image Velocimetry on a side-by-side dual-rotor eVTOL configuration. Full-field velocity maps, tip vortex dynamics, rotor-to-rotor wake interaction.</p>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- LAB 1 -->
+  <section class="section">
+    <div class="two-col top reverse">
+      <div>
+        <img src="../images/airfoil-lab.jpeg" alt="NACA 0015 mounted in test section" class="img-full" />
+        <p class="img-caption">NACA 0015 mounted in the test section — Futek 6-axis force balance</p>
+      </div>
+      <div>
+        <p class="section-label">Lab 01</p>
+        <h2 class="section-title">Forces from<br>a balance.</h2>
+        <div class="section-text">
+          <p>
+            The first session used a <strong>6-axis Futek force balance</strong> to measure the aerodynamic forces and moments acting on a symmetric NACA 0015 airfoil. Before any acquisition, a 3×3 calibration matrix was derived by applying known loads along independent directions and performing a least-squares regression — verifying that cross-talk between axes was negligible.
+          </p>
+          <p>
+            Measurements were taken at 11 angles of attack from −4° to +16°, with three independent acquisitions averaged at each condition. Force components in the body frame were rotated into the wind frame to recover lift and drag, then non-dimensionalised into CL, CD, and CM curves. Results aligned well with XFOIL in the attached flow regime, with clear stall onset visible in all coefficients above 10°.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- LAB 2 -->
+  <section class="section">
+    <div class="two-col top">
+      <div>
+        <p class="section-label">Lab 02</p>
+        <h2 class="section-title">Pressure taps<br>and a hot wire.</h2>
+        <div class="section-text">
+          <p>
+            The second session shifted to a <strong>NACA 23012</strong> instrumented with 16 pressure taps — 8 on the suction side, 8 on the pressure side. Cp distributions were measured at several angles of attack and compared to XFOIL predictions, showing good general agreement. Three different methods were used to integrate the Cp field into a lift coefficient, and their accuracy was benchmarked against each other.
+          </p>
+          <p>
+            The second part introduced a <strong>hot-wire anemometer</strong> traversed vertically across the wake at fixed incidence. The velocity deficit profile was used to compute drag via momentum conservation, complementing the pressure-based lift measurement with a viscous drag estimate. A spectral analysis of the velocity fluctuations at three wake heights revealed how turbulent energy decays moving away from the wake centreline.
+          </p>
+        </div>
+      </div>
+      <div>
+        <img src="../images/hot-wire.png" alt="Hot-wire anemometer probe" class="img-full" />
+        <p class="img-caption">Hot-wire anemometer probe — wake traverse downstream of NACA 23012</p>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- LAB 3 — PIV -->
+  <section class="section">
+    <div class="two-col top reverse">
+      <div>
+        <img src="../images/sperimentazione_PIV.png" alt="PIV velocity field eVTOL side-by-side rotors" class="img-full" />
+        <p class="img-caption">PIV velocity field — side-by-side eVTOL rotor configuration, near-wake region</p>
+      <div>
+        <p class="section-label">Lab 03</p>
+        <h2 class="section-title">Making the<br>invisible visible.</h2>
+        <div class="section-text">
+          <p>
+            The third session used <strong>Particle Image Velocimetry</strong> to map the flow field generated by a side-by-side dual-rotor configuration representative of eVTOL propulsion systems. PIV is a non-intrusive optical technique: the flow is seeded with tracer particles, illuminated by a laser sheet, and captured with a double-frame camera. Cross-correlating the two frames yields a full 2D velocity field — something no point measurement can provide.
+          </p>
+          <p>
+            The interest of the <strong>side-by-side configuration</strong> lies in the aerodynamic coupling between the two rotor wakes. Tip vortices shed by adjacent rotors interact in the near wake, producing vortex pairing and merging phenomena that affect both thrust and noise. The PIV measurements allowed direct observation of these interaction regions — a dataset directly relevant to the aerodynamic and acoustic design of next-generation urban air mobility vehicles.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>© 2025 Giovanni Sambo</p>
+    <a href="../portfolio.html" style="font-family: var(--mono); font-size: 11px; color: var(--text-muted); text-decoration: none;">← Back to portfolio</a>
+  </footer>
+
+</body>
+</html>
