@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Beyond Engineering — Giovanni Sambo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-85QGGEVQND"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-85QGGEVQND');
+  </script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0c0e12; --bg2: #13161c; --bg3: #1a1e26;
+      --accent: #c8a96e; --text: #e8e4dc; --text-muted: #8a8680;
+      --border: rgba(200,169,110,0.15);
+      --mono: 'Space Mono', monospace; --sans: 'DM Sans', sans-serif;
+    }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: var(--sans); font-size: 16px; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 4rem; background: rgba(12,14,18,0.85); backdrop-filter: blur(12px); border-bottom: 0.5px solid var(--border); }
+    .nav-logo { font-family: var(--mono); font-size: 13px; color: var(--accent); letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none; }
+    .back-link { font-family: var(--mono); font-size: 12px; color: #c8c4bc; text-decoration: none; letter-spacing: 0.05em; transition: color 0.2s; }
+    .back-link:hover { color: var(--accent); }
+
+    .hero { height: 100vh; position: relative; overflow: hidden; display: flex; align-items: flex-end; padding: 4rem; }
+    .hero-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 30%; }
+    .hero::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, rgba(12,14,18,0.92) 0%, rgba(12,14,18,0.15) 55%, transparent 100%); }
+    .hero-content { position: relative; z-index: 2; max-width: 600px; }
+    .hero-tag { font-family: var(--mono); font-size: 11px; color: var(--accent); letter-spacing: 0.18em; text-transform: uppercase; margin-bottom: 1rem; }
+    .hero-title { font-family: var(--mono); font-size: clamp(2.2rem, 4.5vw, 3.8rem); font-weight: 700; line-height: 1.1; color: var(--text); margin-bottom: 1.25rem; }
+    .hero-sub { font-size: 1rem; color: rgba(232,228,220,0.7); max-width: 480px; line-height: 1.75; }
+
+    /* NARRATIVE LAYOUT */
+    .narrative { max-width: 740px; margin: 0 auto; padding: 6rem 4rem; }
+
+    .narrative p { color: var(--text-muted); font-size: 1.05rem; line-height: 1.95; margin-bottom: 1.75rem; }
+    .narrative p:last-child { margin-bottom: 0; }
+    .narrative p strong { color: var(--text); font-weight: 500; }
+
+    .chapter { font-family: var(--mono); font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 1.5rem; margin-top: 4.5rem; display: block; padding-bottom: 0.75rem; border-bottom: 0.5px solid var(--border); }
+
+    /* SMALL PHOTOS — float alongside text */
+    .photo-float {
+      float: right;
+      width: 220px;
+      margin: 0 0 1.25rem 2rem;
+      flex-shrink: 0;
+    }
+    .photo-float.left {
+      float: left;
+      margin: 0 2rem 1.25rem 0;
+    }
+    .photo-float img { width: 100%; display: block; border: 0.5px solid var(--border); aspect-ratio: 3/4; object-fit: cover; }
+    .photo-float.wide img { aspect-ratio: 4/3; }
+    .photo-caption { font-family: var(--mono); font-size: 9px; color: var(--text-muted); letter-spacing: 0.07em; text-transform: uppercase; margin-top: 0.4rem; opacity: 0.6; }
+
+    .clearfix::after { content: ''; display: table; clear: both; }
+
+    /* SMALL INLINE PAIR */
+    .photo-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; margin: 2rem 0; }
+    .photo-pair img { width: 100%; aspect-ratio: 4/3; object-fit: cover; border: 0.5px solid var(--border); display: block; }
+
+    .divider { border: none; border-top: 0.5px solid var(--border); margin: 0 4rem; }
+    footer { padding: 2rem 4rem; border-top: 0.5px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+    footer p { font-family: var(--mono); font-size: 11px; color: var(--text-muted); }
+
+    @media (max-width: 800px) {
+      nav { padding: 1rem 1.5rem; }
+      .hero { padding: 2rem; }
+      .narrative { padding: 3rem 1.5rem; }
+      .divider { margin: 0 1.5rem; }
+      .photo-float, .photo-float.left { float: none; width: 100%; margin: 1.5rem 0; }
+      .photo-float img, .photo-float.wide img { aspect-ratio: 16/9; }
+      footer { padding: 1.5rem; flex-direction: column; gap: 0.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="portfolio.html" class="nav-logo">← G. Sambo</a>
+    <a href="portfolio.html" class="back-link">Back to portfolio</a>
+  </nav>
+
+  <div class="hero">
+    <img src="images/erasmus_tramontostupendosevilla.jpeg" alt="Sunset over the Guadalquivir, Seville" class="hero-img" />
+    <div class="hero-content">
+      <p class="hero-tag">Beyond Engineering</p>
+      <h1 class="hero-title">Life outside<br>the equations.</h1>
+      <p class="hero-sub">Engineering is how I think. But there is a lot more that shaped who I am.</p>
+    </div>
+  </div>
+
+  <article class="narrative">
+
+    <span class="chapter">Growing up</span>
+
+    <div class="clearfix">
+      <div class="photo-float">
+        <img src="images/team_pallanuoto.jpeg" alt="Water polo team" />
+        <p class="photo-caption">Under 17 — nationals season</p>
+      </div>
+
+      <p>
+        I grew up playing sport. Swimming and skiing were the first — agonistic, structured, repetitive in the best sense. But the thing that really shaped me was water polo, which I started towards the end of middle school almost by chance. I ended up playing for years, moving between categories from Under 13 to the first team in Serie B, competing at national level at Under 15, and captaining the Under 17 side. I spent an enormous amount of time in pools, on coaches to away games, in changing rooms with people older than me trying to figure out where I fit. I learned a lot about how teams actually work — not from a textbook, but from being in one.
+      </p>
+
+      <p>
+        In my fourth year of high school I quit. Not because anything went wrong — I just felt like I had spent my entire life with my schedule pre-arranged by training, and I wanted to know what it was like to have a weekend that belonged to me. So I stopped, and I started learning the piano instead. I gave myself one target: play Yann Tiersen's <em>Comptine d'un autre été</em> at the Christmas concert, six months away. I got there. It's still how I approach most things — I need a concrete goal, not a vague intention.
+      </p>
+    </div>
+
+    <span class="chapter">Flying, before I knew what aerodynamics was</span>
+
+    <div class="clearfix">
+      <div class="photo-float left wide">
+        <img src="images/aereo.jpeg" alt="In the cockpit of an ultralight" />
+        <p class="photo-caption">First time in the cockpit</p>
+      </div>
+
+      <p>
+        My father flies ultralight aircraft. I grew up around small airfields, watching him prepare for flights, eventually sitting next to him in the cockpit. Long before I could explain what lift was, I already knew I was fascinated by it. We also had a real engine failure once — an unplanned landing in a field that my father handled with complete calm. I remember watching him work through it and thinking there was something remarkable about that kind of preparation. I did not decide to study aerospace that day, but the memory stayed.
+      </p>
+
+      <div class="photo-float wide" style="width:200px; margin-top:0.5rem;">
+        <img src="images/aereoinpanne.jpeg" alt="Engine failure emergency landing" />
+        <p class="photo-caption">Engine failure — emergency field landing</p>
+      </div>
+
+      <p>
+        Alongside flying, I also spent a lot of time on the water. Sailing trips with my father from when I was young gave me a relationship with the sea that has never really left. I got my Advanced scuba certification early and did many dives — there is a particular quality of attention that the sea demands, whether you are on it or under it, that I find hard to find anywhere else.
+      </p>
+    </div>
+
+    <span class="chapter">The drone, the lockdown, and the exam</span>
+
+    <div class="clearfix">
+      <div class="photo-float">
+        <img src="images/primoprototipodrone.jpeg" alt="Drone under construction" />
+        <p class="photo-caption">First prototype — living room floor, 2020</p>
+      </div>
+
+      <p>
+        The last months of high school happened online, at home, during the COVID lockdown. I filled the time by building a drone from scratch — not a kit, but individual components sourced with the help of a local hobby shop whose staff sold me second-hand parts and answered every question I had. It took weeks of failed attempts and burnt electronics before it lifted off the ground for the first time. I brought the whole project to my high school final exam, presenting the physics of brushless motors, and flew the drone outside the school building on the day of the exam. It was the first time engineering felt genuinely mine.
+      </p>
+    </div>
+
+    <span class="chapter">Erasmus, Seville, and 22 countries</span>
+
+    <div class="clearfix">
+
+      <p>
+        In the second year of my Master's I spent six months in Seville as part of the Erasmus programme. Academically I took courses in Heat Transfer and Aircraft Trajectory Optimization. But what I remember most is arriving in a city I did not know, in a language I could manage but not master, and finding — surprisingly quickly — that I felt at ease. I went to the Feria de Abril, watched the sun go down over the Guadalquivir more times than I can count, and made friends I have since visited in Poland, Portugal, and Germany.
+      </p>
+
+      <div class="photo-pair">
+        <img src="images/erasmus_amiciFeriaSevilla.jpeg" alt="Feria de Abril, Seville" />
+        <img src="images/erasmus_chillisbona.jpeg" alt="Lisbon waterfront" />
+      </div>
+
+      <p>
+        When I came back, Seville had changed something in me — not dramatically, but in the way that matters. I was more comfortable with uncertainty, more willing to show up somewhere new without knowing anyone, more curious about the people I had not yet met. I have visited 22 countries in total. Not to collect them, but because moving around, adjusting, figuring out unfamiliar places with unfamiliar people — it suits me.
+      </p>
+    </div>
+
+    <span class="chapter">Jobs that had nothing to do with engineering</span>
+
+    <p>
+      At 17 I worked as a lifeguard at a campsite in Jesolo — my first experience of real responsibility away from home. During university I poured beers at San Siro stadium on match nights, serving 70,000 people in a few frantic hours, and worked as a waiter at a Milan club called Gattopardo. None of these have anything to do with aerodynamics. But they gave me something that years of university could not: the experience of work that is physically demanding, socially intense, and unforgiving when you make a mistake. I took these jobs because I wanted them, not because I had to. And I came back to engineering each time with a slightly clearer sense of why I had chosen it.
+    </p>
+
+    <span class="chapter">Where things stand</span>
+
+    <p>
+      I am finishing my Master's thesis on Flettner rotors and will be done in October 2026. I am looking for roles in aerodynamics, CFD, wind energy or R&D — in Italy or elsewhere in Europe. If you have made it this far and something here resonates, I would be glad to hear from you.
+    </p>
+
+  </article>
+
+  <hr class="divider" />
+
+  <footer>
+    <p>© 2026 Giovanni Sambo</p>
+    <a href="portfolio.html" style="font-family: var(--mono); font-size: 11px; color: var(--text-muted); text-decoration: none;">← Back to portfolio</a>
+  </footer>
+
+</body>
+</html>
