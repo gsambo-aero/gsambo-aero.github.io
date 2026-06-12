@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Beyond Engineering — Giovanni Sambo</title>
+  <title>Beyond Engineering - Giovanni Sambo</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
@@ -17,7 +17,7 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --bg: #0c0e12; --bg2: #13161c; --bg3: #1a1e26;
+      --bg: #0c0e12; --bg2: #13161c;
       --accent: #c8a96e; --text: #e8e4dc; --text-muted: #8a8680;
       --border: rgba(200,169,110,0.15);
       --mono: 'Space Mono', monospace; --sans: 'DM Sans', sans-serif;
@@ -38,33 +38,21 @@
     .hero-title { font-family: var(--mono); font-size: clamp(2.2rem, 4.5vw, 3.8rem); font-weight: 700; line-height: 1.1; color: var(--text); margin-bottom: 1.25rem; }
     .hero-sub { font-size: 1rem; color: rgba(232,228,220,0.7); max-width: 480px; line-height: 1.75; }
 
-    /* NARRATIVE LAYOUT */
     .narrative { max-width: 740px; margin: 0 auto; padding: 6rem 4rem; }
-
     .narrative p { color: var(--text-muted); font-size: 1.05rem; line-height: 1.95; margin-bottom: 1.75rem; }
     .narrative p:last-child { margin-bottom: 0; }
     .narrative p strong { color: var(--text); font-weight: 500; }
+    .narrative em { color: var(--text-muted); font-style: italic; }
 
     .chapter { font-family: var(--mono); font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 1.5rem; margin-top: 4.5rem; display: block; padding-bottom: 0.75rem; border-bottom: 0.5px solid var(--border); }
 
-    /* SMALL PHOTOS — float alongside text */
-    .photo-float {
-      float: right;
-      width: 220px;
-      margin: 0 0 1.25rem 2rem;
-      flex-shrink: 0;
-    }
-    .photo-float.left {
-      float: left;
-      margin: 0 2rem 1.25rem 0;
-    }
+    .photo-float { float: right; width: 210px; margin: 0 0 1.25rem 2rem; }
+    .photo-float.left { float: left; margin: 0 2rem 1.25rem 0; }
     .photo-float img { width: 100%; display: block; border: 0.5px solid var(--border); aspect-ratio: 3/4; object-fit: cover; }
     .photo-float.wide img { aspect-ratio: 4/3; }
     .photo-caption { font-family: var(--mono); font-size: 9px; color: var(--text-muted); letter-spacing: 0.07em; text-transform: uppercase; margin-top: 0.4rem; opacity: 0.6; }
-
     .clearfix::after { content: ''; display: table; clear: both; }
 
-    /* SMALL INLINE PAIR */
     .photo-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; margin: 2rem 0; }
     .photo-pair img { width: 100%; aspect-ratio: 4/3; object-fit: cover; border: 0.5px solid var(--border); display: block; }
 
@@ -95,70 +83,77 @@
     <div class="hero-content">
       <p class="hero-tag">Beyond Engineering</p>
       <h1 class="hero-title">Life outside<br>the equations.</h1>
-      <p class="hero-sub">Engineering is how I think. But there is a lot more that shaped who I am.</p>
+      <p class="hero-sub">Engineering is how I think. But there is a lot more that shaped who I am - sport, travel, people, and a few jobs that had nothing to do with aerodynamics.</p>
     </div>
   </div>
 
   <article class="narrative">
 
-    <span class="chapter">Growing up</span>
+    <span class="chapter">Sport - where it started</span>
 
     <div class="clearfix">
       <div class="photo-float">
         <img src="images/team_pallanuoto.jpeg" alt="Water polo team" />
-        <p class="photo-caption">Under 17 — nationals season</p>
+        <p class="photo-caption">Under 17 </p>
       </div>
 
       <p>
-        I grew up playing sport. Swimming and skiing were the first — agonistic, structured, repetitive in the best sense. But the thing that really shaped me was water polo, which I started towards the end of middle school almost by chance. I ended up playing for years, moving between categories from Under 13 to the first team in Serie B, competing at national level at Under 15, and captaining the Under 17 side. I spent an enormous amount of time in pools, on coaches to away games, in changing rooms with people older than me trying to figure out where I fit. I learned a lot about how teams actually work — not from a textbook, but from being in one.
+        I grew up competing. Swimming and skiing agonistically from a young age gave me something I did not fully appreciate at the time - the ability to work hard at something repetitive and unglamorous without losing interest in it. It is a quality that turns out to be useful in engineering too.
       </p>
 
       <p>
-        In my fourth year of high school I quit. Not because anything went wrong — I just felt like I had spent my entire life with my schedule pre-arranged by training, and I wanted to know what it was like to have a weekend that belonged to me. So I stopped, and I started learning the piano instead. I gave myself one target: play Yann Tiersen's <em>Comptine d'un autre été</em> at the Christmas concert, six months away. I got there. It's still how I approach most things — I need a concrete goal, not a vague intention.
+        But the sport that really formed me was water polo, which I started towards the end of middle school and played for years. I was good enough to be moved between categories constantly - from Under 13 to the first team in Serie B, training and competing alongside players much older than me. I played at national level at Under 15, and one season captained the Under 17 side. What I remember most is not the results but the team itself: a group of people I am still close to today, years after the last match. That kind of belonging - being part of something where you genuinely depend on each other - is something I have tried to find in other areas of my life ever since. When I work in a group, I naturally end up coordinating - not because I push for it, but because I care about the work moving forward.
+      </p>
+
+      <p>
+        In my fourth year of high school I quit. The schedules had structured every weekend of my life for as long as I could remember, and I needed to understand what it was like without them. I stopped, picked up kickboxing for a while, and started learning the piano. I gave myself one concrete target: play Yann Tiersen's <em>Comptine d'un autre été</em> at the Christmas concert, six months away. I got there. It is still how I approach most things - not with a vague intention to improve at something, but with a specific goal and a deadline.
       </p>
     </div>
 
-    <span class="chapter">Flying, before I knew what aerodynamics was</span>
+    <span class="chapter">The sea and the sky</span>
 
     <div class="clearfix">
       <div class="photo-float left wide">
         <img src="images/aereo.jpeg" alt="In the cockpit of an ultralight" />
-        <p class="photo-caption">First time in the cockpit</p>
+        <p class="photo-caption">In the cockpit - flying with my father</p>
       </div>
 
       <p>
-        My father flies ultralight aircraft. I grew up around small airfields, watching him prepare for flights, eventually sitting next to him in the cockpit. Long before I could explain what lift was, I already knew I was fascinated by it. We also had a real engine failure once — an unplanned landing in a field that my father handled with complete calm. I remember watching him work through it and thinking there was something remarkable about that kind of preparation. I did not decide to study aerospace that day, but the memory stayed.
+        I grew up around small airfields - watching him run pre-flight checks, sitting in the cockpit beside him, eventually going up myself. There is a particular feeling to being in a small plane: the noise, the vibration, the way the ground falls away. Long before I understood what aerodynamics was, I was already in love with it. Me and my father also had a real engine failure once, an unplanned landing in a field that my father handled with complete calm, working through each step methodically while I helped him. I did not decide to study aerospace that day. But the memory stayed.
       </p>
 
-      <div class="photo-float wide" style="width:200px; margin-top:0.5rem;">
-        <img src="images/aereoinpanne.jpeg" alt="Engine failure emergency landing" />
-        <p class="photo-caption">Engine failure — emergency field landing</p>
+      <div class="photo-float wide" style="width:195px; margin-top:0.25rem;">
+        <img src="images/aereoinpanne.jpeg" alt="Engine failure — emergency landing" />
+        <p class="photo-caption">Engine failure - field landing</p>
       </div>
 
       <p>
-        Alongside flying, I also spent a lot of time on the water. Sailing trips with my father from when I was young gave me a relationship with the sea that has never really left. I got my Advanced scuba certification early and did many dives — there is a particular quality of attention that the sea demands, whether you are on it or under it, that I find hard to find anywhere else.
+        Alongside flying, the sea has always been part of my life. I used to go sailing from when I was young - proper trips, not day outings - and those experiences gave me a comfort with the open water that has never gone away. I got my Advanced scuba diving certification early and did many dives with tanks. Underwater, there is a quality of attention that the environment demands - total focus, no distractions - that I find hard to replicate anywhere else. From a young age I was also genuinely passionate about fishing, another activity that teaches patience and observation in a very direct way.
       </p>
     </div>
 
-    <span class="chapter">The drone, the lockdown, and the exam</span>
+    <span class="chapter">Building the drone</span>
 
     <div class="clearfix">
       <div class="photo-float">
         <img src="images/primoprototipodrone.jpeg" alt="Drone under construction" />
-        <p class="photo-caption">First prototype — living room floor, 2020</p>
+        <p class="photo-caption">First prototype - living room, 2020</p>
       </div>
 
       <p>
-        The last months of high school happened online, at home, during the COVID lockdown. I filled the time by building a drone from scratch — not a kit, but individual components sourced with the help of a local hobby shop whose staff sold me second-hand parts and answered every question I had. It took weeks of failed attempts and burnt electronics before it lifted off the ground for the first time. I brought the whole project to my high school final exam, presenting the physics of brushless motors, and flew the drone outside the school building on the day of the exam. It was the first time engineering felt genuinely mine.
+        The last months of high school happened at home, during the COVID lockdown. I filled the time by building a drone from scratch - not from a kit, but from individual components: a carbon fibre frame, brushless motors, ESCs, a flight controller, a LiPo battery. I walked into a local hobby shop with a rough idea and walked out with second-hand parts the staff sold me at a discount, along with patient answers to every question I had. It took weeks of failed attempts and burnt electronics before it lifted off for the first time. Wobbly, barely controllable - but flying.
+      </p>
+
+      <p>
+        I brought the project to my high school final exam, presenting the physics of brushless motors and electromagnetic principles, and flew the drone outside the school building on the day of the exam itself. It was the first time engineering felt like something I had actually made, rather than something I had studied.
       </p>
     </div>
 
-    <span class="chapter">Erasmus, Seville, and 22 countries</span>
+    <span class="chapter">Seville and moving through the world</span>
 
     <div class="clearfix">
-
       <p>
-        In the second year of my Master's I spent six months in Seville as part of the Erasmus programme. Academically I took courses in Heat Transfer and Aircraft Trajectory Optimization. But what I remember most is arriving in a city I did not know, in a language I could manage but not master, and finding — surprisingly quickly — that I felt at ease. I went to the Feria de Abril, watched the sun go down over the Guadalquivir more times than I can count, and made friends I have since visited in Poland, Portugal, and Germany.
+        In the second year of my Master's I spent six months in Seville on Erasmus. Academically I followed courses in Heat Transfer and Aircraft Trajectory Optimization. But what I remember most is arriving in a city I did not know, in a language I could manage but not fully own, and finding - surprisingly quickly - that I felt at ease. I went to the Feria de Abril, the most extraordinary festival I have ever seen, the whole city transformed for a week into something you could not quite believe was real. I watched sunsets over the Guadalquivir that I still think about. I made friends from across Europe - people I have since visited in other countries, who have visited me.
       </p>
 
       <div class="photo-pair">
@@ -167,20 +162,30 @@
       </div>
 
       <p>
-        When I came back, Seville had changed something in me — not dramatically, but in the way that matters. I was more comfortable with uncertainty, more willing to show up somewhere new without knowing anyone, more curious about the people I had not yet met. I have visited 22 countries in total. Not to collect them, but because moving around, adjusting, figuring out unfamiliar places with unfamiliar people — it suits me.
+        When I came back, Seville had changed something in me - not dramatically, but in the way that matters. I was more comfortable with uncertainty, more willing to show up somewhere new without knowing anyone, more curious about the people I had not yet met. I have visited 22 countries in total. Not to collect them, but because moving around, adjusting, figuring out unfamiliar places with unfamiliar people - it suits me.
       </p>
     </div>
 
-    <span class="chapter">Jobs that had nothing to do with engineering</span>
+    <span class="chapter">On choosing how to study</span>
 
     <p>
-      At 17 I worked as a lifeguard at a campsite in Jesolo — my first experience of real responsibility away from home. During university I poured beers at San Siro stadium on match nights, serving 70,000 people in a few frantic hours, and worked as a waiter at a Milan club called Gattopardo. None of these have anything to do with aerodynamics. But they gave me something that years of university could not: the experience of work that is physically demanding, socially intense, and unforgiving when you make a mistake. I took these jobs because I wanted them, not because I had to. And I came back to engineering each time with a slightly clearer sense of why I had chosen it.
+      One thing I noticed about myself during the Master's is that I learn differently when there is something to build or test alongside the theory. I deliberately chose courses that included a project component - not because they were easier, but because they were more interesting. Wind tunnel labs, CFD simulations, a 3D-printed bus model, a full flight test campaign with Pipistrel. The theory made more sense when I could see what it was for. I think that is also why the jobs I have done outside engineering have never felt like a distraction - they were another form of learning by doing, just in a completely different context.
+    </p>
+
+    <span class="chapter">Jobs that had nothing to do with aerodynamics</span>
+
+    <p>
+      At 17 I worked as a lifeguard at a campsite in Jesolo - my first real experience of responsibility away from home, managing safety for a pool full of strangers every day of the week. I liked it. The directness of it, the fact that you either did the job or you did not, with no ambiguity. During university I worked as a bartender at San Siro stadium on match nights - serving tens of thousands of people in a few frantic hours, moving fast, staying focused in conditions that are genuinely chaotic. I also worked for several months as a waiter at Gattopardo, a Milan club, where the pace was relentless and the margin for error was essentially zero.
+    </p>
+
+    <p>
+      None of these have anything to do with aerodynamics. But they taught me things that years of coursework could not: how to read a room quickly, how to stay calm when everything is moving at once, how to be reliable when someone is depending on you and has no patience for excuses. I took these jobs because I wanted them - because I was curious about what that kind of work felt like - and I have never regretted it. Coming back to engineering after a summer of lifeguarding, or a Saturday night at San Siro, always made me appreciate the complexity of what I was studying a little more.
     </p>
 
     <span class="chapter">Where things stand</span>
 
     <p>
-      I am finishing my Master's thesis on Flettner rotors and will be done in October 2026. I am looking for roles in aerodynamics, CFD, wind energy or R&D — in Italy or elsewhere in Europe. If you have made it this far and something here resonates, I would be glad to hear from you.
+      I am finishing my Master's thesis on Flettner rotors and will be done in October 2026. I am looking for roles in aerodynamics, CFD, wind energy or R&D - in Italy or elsewhere in Europe. If you have made it this far and something here resonates, I would be glad to hear from you.
     </p>
 
   </article>
