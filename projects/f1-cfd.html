@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CFD F1 Front Wing — Giovanni Sambo</title>
+  <title>CFD F1 Front Wing - Giovanni Sambo</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
@@ -292,7 +292,7 @@
     <div class="hero-content">
       <p class="hero-tag">CFD · SU2 · Motorsport · Politecnico di Milano · A.A. 2024–2025</p>
       <h1 class="hero-title">Ground Effect &<br>Porpoising on a<br>F1 Front Wing</h1>
-      <p class="hero-sub">2D compressible RANS/URANS simulations of a 2022 Formula 1 front wing — comparing steady ground effect with the unsteady aerodynamics of porpoising.</p>
+      <p class="hero-sub">2D compressible RANS/URANS simulations of a 2022 Formula 1 front wing - comparing steady ground effect with the unsteady aerodynamics of porpoising.</p>
     </div>
   </div>
 
@@ -304,7 +304,7 @@
         <h2 class="section-title">When the wing<br>bounces off the ground.</h2>
         <div class="section-text">
           <p>
-            This CFD project analyzed the aerodynamic behavior of a <strong>2022 Formula 1 front wing</strong> in two conditions: stationary ground effect, and the <strong>porpoising</strong> phenomenon — the repetitive vertical oscillation at 4–8 Hz that plagued several F1 teams in 2022.
+            This CFD project analyzed the aerodynamic behavior of a <strong>2022 Formula 1 front wing</strong> in two conditions: stationary ground effect, and the <strong>porpoising</strong> phenomenon - the repetitive vertical oscillation at 4-8 Hz that plagued several F1 teams in 2022.
           </p>
           <p>
             Using the open-source solver <strong>SU2</strong>, we ran 2D compressible simulations on a three-element wing based on NACA profiles (4412, 6412, 2410), modeled after Section D of the 2022 FIA-compliant front wing geometry. The ground was modeled as a <strong>moving wall</strong> at freestream velocity to correctly simulate the ground effect.
@@ -316,7 +316,7 @@
       </div>
       <div>
         <img src="../images/CFD_3d_front_wing.png" alt="3D F1 front wing geometry" class="img-full" />
-        <p class="img-caption">2022 F1 front wing — Section D selected for 2D analysis</p>
+        <p class="img-caption">2022 F1 front wing - Section D selected for 2D analysis</p>
       </div>
     </div>
 
@@ -335,7 +335,8 @@
       </div>
       <div class="spec-item">
         <p class="spec-label">Turbulence model</p>
-        <p class="spec-value">Spalart-Allmaras (SA)</p>
+        <p class="spec-value">Spalart-Allmaras (SA) vs Shear Stress
+          Transport (SST)</p>
       </div>
       <div class="spec-item">
         <p class="spec-label">Steady case</p>
@@ -363,7 +364,7 @@
     <div class="two-col reverse">
       <div>
         <img src="../images/CFD_mesh_vicinoaiprofili.png" alt="Hybrid mesh near airfoil profiles" class="img-full" />
-        <p class="img-caption">Hybrid mesh — structured boundary layer + unstructured farfield</p>
+        <p class="img-caption">Hybrid mesh - structured boundary layer + unstructured farfield</p>
       </div>
       <div>
         <p class="section-label">Mesh & Setup</p>
@@ -384,7 +385,7 @@
 
     <div style="margin-top: 2rem;">
       <img src="../images/CFD_dominio.png" alt="Computational domain" class="img-full" />
-      <p class="img-caption">Computational domain — rectangular farfield with two refinement boxes</p>
+      <p class="img-caption">Computational domain - rectangular farfield with two refinement boxes</p>
     </div>
   </section>
 
@@ -403,7 +404,7 @@
     <div class="findings-grid">
       <div class="finding-item">
         <p class="finding-label">Average downforce (C<sub>L</sub>)</p>
-        <p class="finding-value">−54% vs steady</p>
+        <p class="finding-value">-54% vs steady</p>
         <p class="finding-desc">Rapid ground clearance variations cause alternating high/low downforce phases. The time-averaged lift is approximately halved.</p>
       </div>
       <div class="finding-item">
@@ -413,17 +414,17 @@
       </div>
       <div class="finding-item">
         <p class="finding-label">Flow at lower peak</p>
-        <p class="finding-desc">Wing closest to ground — maximum flow acceleration beneath profiles, strong pressure gradients, highest risk of flow separation at leading and trailing edges.</p>
+        <p class="finding-desc">Wing closest to ground - maximum flow acceleration beneath profiles, strong pressure gradients, highest risk of flow separation at leading and trailing edges.</p>
       </div>
       <div class="finding-item">
         <p class="finding-label">Flow at upper peak</p>
-        <p class="finding-desc">Wing farthest from ground — shorter wake, reduced ground interaction, lower induced drag. Flow is more uniform above and below profiles.</p>
+        <p class="finding-desc">Wing farthest from ground - shorter wake, reduced ground interaction, lower induced drag. Flow is more uniform above and below profiles.</p>
       </div>
     </div>
 
     <div style="margin-top: 2.5rem;">
       <img src="../images/CFD_flussofinaleunsteady.png" alt="Unsteady flow field velocity magnitude" class="img-full" />
-      <p class="img-caption">Velocity magnitude field — unsteady URANS simulation during porpoising oscillation</p>
+      <p class="img-caption">Velocity magnitude field - unsteady URANS simulation during porpoising oscillation</p>
     </div>
   </section>
 
@@ -432,13 +433,13 @@
   <!-- TURBULENCE MODEL -->
   <section class="section">
     <p class="section-label">Methodology note</p>
-    <h2 class="section-title">SA vs SST —<br>accuracy vs cost.</h2>
+    <h2 class="section-title">SA vs SST -<br>accuracy vs cost.</h2>
     <div class="section-text">
       <p>
         Both the <strong>Spalart-Allmaras (SA)</strong> and <strong>SST k-ω</strong> turbulence models were evaluated. The SST model showed marginally better accuracy in capturing flow separation near leading and trailing edges, but at higher computational cost. The relative error between the two models on CL was below 1.1%.
       </p>
       <p>
-        Given the high computational demand of the URANS porpoising simulation, the <strong>SA model was selected</strong> for the unsteady analysis — a deliberate trade-off between fidelity and computational efficiency that is standard practice in applied CFD.
+        Given the high computational demand of the URANS porpoising simulation, the <strong>SA model was selected</strong> for the unsteady analysis - a deliberate trade-off between fidelity and computational efficiency that is standard practice in applied CFD.
       </p>
       <p>
         Future extensions of this work could incorporate <strong>3D simulations</strong> and <strong>aeroelastic effects</strong> to capture the full complexity of the porpoising phenomenon in real racing conditions.
@@ -447,7 +448,7 @@
   </section>
 
   <footer>
-    <p>© 2025 Giovanni Sambo</p>
+    <p>© 2026 Giovanni Sambo</p>
     <a href="../portfolio.html" style="font-family: var(--mono); font-size: 11px; color: var(--text-muted); text-decoration: none;">← Back to portfolio</a>
   </footer>
 
