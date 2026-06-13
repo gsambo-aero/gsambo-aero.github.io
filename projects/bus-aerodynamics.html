@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Bus Aerodynamics — Giovanni Sambo</title>
+  <title>Bus Aerodynamics - Giovanni Sambo</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
@@ -99,9 +99,9 @@
   <div class="hero">
     <img src="../images/Airbus_testsectionconbus.jpeg" alt="Bus model in wind tunnel test section" class="hero-img" />
     <div class="hero-content">
-      <p class="hero-tag">CFD · OpenFOAM · Wind Tunnel · Politecnico di Milano · A.A. 2024–2025</p>
-      <h1 class="hero-title">Aerodynamic Drag<br>Reduction —<br>Travel Bus</h1>
-      <p class="hero-sub">Wind tunnel testing and OpenFOAM CFD simulations on a 1:20 scale Mercedes-Benz Tourismo model — exploring side skirts, rear tapering, and their combined effect on drag reduction.</p>
+      <p class="hero-tag">CFD · OpenFOAM · Wind Tunnel · Politecnico di Milano · A.A. 2024-2025</p>
+      <h1 class="hero-title">Aerodynamic Drag<br>Reduction -<br>Travel Bus</h1>
+      <p class="hero-sub">Wind tunnel testing and OpenFOAM CFD simulations on a 1:20 scale Mercedes-Benz Tourismo model - exploring side skirts, rear tapering, and their combined effect on drag reduction.</p>
     </div>
   </div>
 
@@ -113,7 +113,7 @@
         <h2 class="section-title">From wind tunnel<br>to open road.</h2>
         <div class="section-text">
           <p>
-            Long-distance coaches are characterized by large frontal areas and bluff-body geometries that produce significant aerodynamic drag. At highway cruising speeds (~100 km/h), drag can account for over <strong>50% of total engine power</strong> — making it a prime target for efficiency improvements.
+            Long-distance coaches are characterized by large frontal areas and bluff-body geometries that produce significant aerodynamic drag. At highway cruising speeds (~100 km/h), drag can account for over <strong>50% of total engine power</strong> - making it a prime target for efficiency improvements.
           </p>
           <p>
             This project analyzed the aerodynamic drag of a long-distance coach inspired by the <strong>Mercedes-Benz Tourismo</strong>, modeled in SolidWorks and scaled to 1:20 for wind tunnel testing. The experimental campaign was used to validate the <strong>OpenFOAM CFD setup</strong>, after which all design modifications were tested numerically.
@@ -125,16 +125,16 @@
       </div>
       <div>
         <img src="../images/Airbus_windtunnel.jpeg" alt="Wind tunnel setup" class="img-full" />
-        <p class="img-caption">Open-circuit wind tunnel — PoliMi Aerodynamics Lab</p>
+        <p class="img-caption">Open-circuit wind tunnel - PoliMi Aerodynamics Lab</p>
         <img src="../images/Airbus_configurazionefull.png" alt="Full configuration 3D model" class="img-full" style="margin-top:0.75rem;" />
-        <p class="img-caption">Full configuration — mirrors + side skirts + rear tapering</p>
+        <p class="img-caption">Full configuration - mirrors + side skirts + rear tapering</p>
       </div>
     </div>
 
     <div class="specs-grid">
       <div class="spec-item">
         <p class="spec-label">Solver</p>
-        <p class="spec-value">OpenFOAM — simpleFoam</p>
+        <p class="spec-value">OpenFOAM - simpleFoam</p>
       </div>
       <div class="spec-item">
         <p class="spec-label">Turbulence model</p>
@@ -146,7 +146,7 @@
       </div>
       <div class="spec-item">
         <p class="spec-label">Model scale</p>
-        <p class="spec-value">1:20 — 3D printed</p>
+        <p class="spec-value">1:20 - 3D printed</p>
       </div>
       <div class="spec-item">
         <p class="spec-label">Reynolds number</p>
@@ -162,7 +162,7 @@
       </div>
       <div class="spec-item">
         <p class="spec-label">Validation</p>
-        <p class="spec-value">CFD vs wind tunnel — excellent agreement</p>
+        <p class="spec-value">CFD vs wind tunnel - excellent agreement</p>
       </div>
     </div>
   </section>
@@ -184,10 +184,10 @@
         <h2 class="section-title">Build, test,<br>validate.</h2>
         <div class="section-text">
           <p>
-            The 1:20 scale bus model was <strong>3D printed</strong> and installed in the open-circuit wind tunnel at Politecnico di Milano. A Pitot tube measured dynamic pressure to determine freestream velocity; a <strong>load cell</strong> measured longitudinal drag force for direct C_d computation.
+            The 1:20 scale bus model was <strong>3D printed</strong> and installed in the open-circuit wind tunnel at Politecnico di Milano. A Pitot tube measured dynamic pressure to determine freestream velocity; a <strong>load cell</strong> measured longitudinal drag force for direct Cd computation.
           </p>
           <p>
-            Six consecutive acquisitions were performed at each test condition, sampling at <strong>125 Hz for ~40 seconds</strong>. A Reynolds independence study confirmed that above 10 m/s the drag coefficient becomes geometry-dominated — validating the use of wind tunnel data for CFD comparison regardless of exact Reynolds matching.
+            Six consecutive acquisitions were performed at each test condition, sampling at <strong>125 Hz for ~40 seconds</strong>. A Reynolds independence study confirmed that above 10 m/s the drag coefficient becomes geometry-dominated - validating the use of wind tunnel data for CFD comparison regardless of exact Reynolds matching.
           </p>
           <p>
             Wind tunnel and CFD results showed excellent agreement on drag coefficient, confirming the numerical setup before extending the analysis to open-air conditions.
@@ -204,7 +204,7 @@
     <p class="section-label">Drag reduction analysis</p>
     <h2 class="section-title">Four configurations.<br>One clear winner.</h2>
     <div class="section-text">
-      <p>All modifications were evaluated in open-air conditions at 25 m/s using the validated CFD model. The baseline (mirrors only, C_d = 0.5052) served as reference. Results show that rear tapering is by far the most effective individual device, while the full configuration nearly recovers all the drag added by the mirrors.</p>
+      <p>All modifications were evaluated in open-air conditions at 25 m/s using the validated CFD model. The baseline  served as reference. Results show that rear tapering is by far the most effective individual device, while the full configuration nearly recovers all the drag added by the mirrors.</p>
     </div>
 
     <div class="configs-grid">
@@ -220,11 +220,11 @@
       <div class="config-item">
         <p class="config-name">Mirrors + Rear tapering</p>
         <img src="../images/Airbus_posteriore_streamlines_tapering.png" alt="Wake streamlines with rear tapering" style="width:100%;margin:0.75rem 0;border:0.5px solid var(--border);" />
-        <p class="config-desc">Most effective single modification. The tapered rear extension keeps the outer flow attached longer, collapses the recirculation bubble significantly, and reduces wake cross-section — delivering the largest individual drag reduction.</p>
+        <p class="config-desc">Most effective single modification. The tapered rear extension keeps the outer flow attached longer, collapses the recirculation bubble significantly, and reduces wake cross-section - delivering the largest individual drag reduction.</p>
       </div>
       <div class="config-item">
         <p class="config-name">Full configuration</p>
-        <p class="config-desc">Combined mirrors + skirts + tapering. Nearly recovers all the drag added by mirrors, returning the drag coefficient close to the mirrorless baseline — confirming that the base shape was already well optimised.</p>
+        <p class="config-desc">Combined mirrors + skirts + tapering. Nearly recovers all the drag added by mirrors, returning the drag coefficient close to the mirrorless baseline - confirming that the base shape was already well optimised.</p>
       </div>
     </div>
   </section>
@@ -239,10 +239,10 @@
         <h2 class="section-title">Small gains,<br>real impact.</h2>
         <div class="section-text">
           <p>
-            The base Mercedes-Benz Tourismo geometry was already aerodynamically competitive, with a rear chamfer acting as a passive diffuser. This left limited room for improvement — but the full configuration still delivered a significant drag reduction relative to the realistic mirrored baseline.
+            The base Mercedes-Benz Tourismo geometry was already aerodynamically competitive, with a rear chamfer acting as a passive diffuser. This left limited room for improvement - but the full configuration still delivered a significant drag reduction relative to the realistic mirrored baseline.
           </p>
           <p>
-            Knowing that every 2% reduction in drag translates to roughly <strong>1% fuel savings</strong>, even modest improvements have meaningful economic and environmental impact at scale — particularly relevant for electric buses where range is directly at stake.
+            Knowing that every 2% reduction in drag translates to roughly <strong>1% fuel savings</strong>, even modest improvements have meaningful economic and environmental impact at scale - particularly relevant for electric buses where range is directly at stake.
           </p>
           <p>
             Future work could extend the analysis to crosswind conditions, where fairings may show greater benefit, and explore active solutions such as digital mirrors or adaptive rear geometries.
@@ -251,7 +251,7 @@
       </div>
       <div>
         <img src="../images/bus-windtunnel.jpeg" alt="Bus model wind tunnel testing" class="img-full" />
-        <p class="img-caption">Bus model mounted in test section — load cell measuring longitudinal drag force</p>
+        <p class="img-caption">Bus model mounted in test section - load cell measuring longitudinal drag force</p>
       </div>
     </div>
   </section>
