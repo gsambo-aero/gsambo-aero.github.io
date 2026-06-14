@@ -32,6 +32,7 @@
       font-size: 16px;
       line-height: 1.7;
       -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
     }
 
     /* ── NAV ── */
@@ -65,6 +66,18 @@
       transition: color 0.2s;
     }
     .nav-links a:hover { color: var(--accent); }
+
+    /* ── NAV TOGGLE (mobile hamburger) ── */
+    .nav-toggle {
+      display: none;
+      background: none;
+      border: none;
+      color: var(--accent);
+      font-size: 1.5rem;
+      line-height: 1;
+      cursor: pointer;
+      padding: 0.25rem;
+    }
 
     /* ── HERO ── */
     .hero {
@@ -452,15 +465,51 @@
 
     /* ── RESPONSIVE ── */
     @media (max-width: 900px) {
-      nav { padding: 1rem 2rem; }
-      .nav-links { display: none; }
-      .hero { padding: 7rem 2rem 3rem; }
+      nav { padding: 1rem 1.5rem; position: relative; }
+
+      /* hide the desktop inline menu, show hamburger instead */
+      .nav-links {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        flex-direction: column;
+        gap: 0;
+        background: rgba(12,14,18,0.97);
+        backdrop-filter: blur(12px);
+        border-bottom: 0.5px solid var(--border);
+        padding: 0.5rem 0;
+      }
+      .nav-links.open { display: flex; }
+      .nav-links li { width: 100%; }
+      .nav-links a {
+        display: block;
+        padding: 0.85rem 1.5rem;
+        font-size: 14px;
+      }
+      .nav-toggle { display: block; }
+
+      .hero { padding: 7rem 1.5rem 3rem; }
       .hero-grid { grid-template-columns: 1fr; gap: 3rem; }
-      .hero-photo-wrap { max-width: 260px; }
-      section { padding: 4rem 2rem; }
-      .divider { margin: 0 2rem; }
+      .hero-photo-wrap { max-width: 260px; margin: 0 auto; }
+
+      section { padding: 4rem 1.5rem; }
+      .divider { margin: 0 1.5rem; }
+
       .about-grid { grid-template-columns: 1fr; gap: 3rem; }
-      footer { padding: 1.5rem 2rem; flex-direction: column; gap: 0.5rem; text-align: center; }
+      .about-photos { grid-template-columns: 1fr 1fr; }
+      .about-photo-wide { grid-column: span 2; }
+
+      /* force single-column project grid on mobile and clear any
+         explicit column placement that would otherwise create a
+         hidden / off-screen second column */
+      .projects-grid { grid-template-columns: 1fr !important; }
+      .projects-grid > * { grid-column: 1 / -1 !important; }
+
+      .skills-grid { grid-template-columns: 1fr; }
+
+      footer { padding: 1.5rem; flex-direction: column; gap: 0.5rem; text-align: center; }
     }
   </style>
   <!-- Google tag (gtag.js) -->
@@ -477,6 +526,7 @@
   <!-- NAV -->
   <nav>
     <a href="#" class="nav-logo">G. Sambo</a>
+    <button class="nav-toggle" aria-label="Toggle navigation menu" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
     <ul class="nav-links">
       <li><a href="#about">About</a></li>
       <li><a href="#projects">Projects</a></li>
