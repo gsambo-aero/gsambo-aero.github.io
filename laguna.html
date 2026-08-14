@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carta Nautica - Laguna di Venezia</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Georgia', serif; background: #0a1628; color: #e8d5a3; height: 100vh; display: flex; flex-direction: column; }
+
+    header {
+      background: linear-gradient(135deg, #0d2447 0%, #1a3a6e 50%, #0d2447 100%);
+      border-bottom: 2px solid #c8a84b;
+      padding: 8px 16px;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-shrink: 0;
+      box-shadow: 0 2px 15px rgba(0,0,0,0.5);
+      gap: 12px;
+    }
+    .header-title { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+    h1 { font-size: 1.05rem; color: #e8d5a3; letter-spacing: 1.5px; text-transform: uppercase; }
+    h1 span { font-size: 0.68rem; color: #c8a84b; display: block; }
+    .header-stats { display: flex; gap: 14px; font-size: 0.75rem; color: #a0b8d8; }
+    .header-stats div { text-align: center; }
+    .header-stats strong { display: block; color: #c8a84b; font-size: 0.9rem; }
+
+    #map { flex: 1; }
+
+    /* ── Pannello laterale ── */
+    .side-panel {
+      position: absolute; top: 62px; left: 10px; z-index: 1000;
+      background: rgba(10,22,40,0.97); border: 1px solid #c8a84b;
+      border-radius: 8px; padding: 10px; width: 224px;
+      max-height: calc(100vh - 100px); overflow-y: auto;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+    }
+    .side-panel::-webkit-scrollbar { width: 4px; }
+    .side-panel::-webkit-scrollbar-thumb { background: #c8a84b44; border-radius: 2px; }
+    .panel-title {
+      color: #c8a84b; font-size: 0.74rem; letter-spacing: 1.5px;
+      text-transform: uppercase; border-bottom: 1px solid #c8a84b44;
+      padding-bottom: 5px; margin-bottom: 7px;
+    }
+
+    /* Tappa principale (named waypoint) */
+    .tappa-main {
+      display: flex; align-items: flex-start; gap: 7px;
+      padding: 5px 4px; border-radius: 4px; cursor: pointer;
+      transition: background 0.15s;
+    }
+    .tappa-main:hover { background: rgba(200,168,75,0.12); }
+    .tappa-num {
+      width: 20px; height: 20px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.68rem; font-weight: bold; flex-shrink: 0;
+      border: 2px solid rgba(255,255,255,0.35); color: #fff;
+    }
+    .tappa-name { font-size: 0.79rem; color: #e8d5a3; font-weight: bold; line-height: 1.2; }
+    .tappa-sub  { font-size: 0.67rem; color: #6080a0; margin-top: 1px; }
+    .tappa-dist { font-size: 0.65rem; color: #c8a84b88; margin-top: 2px; }
+
+    /* Punti intermedi tracciati */
+    .trace-points-group { padding-left: 10px; border-left: 2px solid #c8a84b22; margin: 2px 0 2px 10px; }
+    .trace-pt {
+      display: flex; align-items: center; gap: 5px;
+      padding: 2px 4px; border-radius: 3px; cursor: pointer;
+      font-size: 0.65rem; color: #708090;
+      transition: background 0.1s;
+    }
+    .trace-pt:hover { background: rgba(142,68,173,0.15); color: #a090c8; }
+    .trace-pt-dot { width: 8px; height: 8px; border-radius: 50%; background: #8e44ad; flex-shrink: 0; border: 1px solid #fff4; }
+    .trace-pt-del { margin-left: auto; color: #e74c3c88; cursor: pointer; font-size: 0.7rem; padding: 0 3px; }
+    .trace-pt-del:hover { color: #e74c3c; }
+
+    .connector-line { width: 2px; height: 10px; background: linear-gradient(to bottom,#c8a84b44,#c8a84b11); margin-left: 10px; }
+
+    .total-dist {
+      margin-top: 8px; padding: 7px; background: rgba(200,168,75,0.1);
+      border-radius: 5px; border: 1px solid #c8a84b33;
+      text-align: center; font-size: 0.76rem; color: #a0b8d8;
+    }
+    .total-dist strong { color: #c8a84b; font-size: 0.95rem; display: block; }
+
+    .panel-btn {
+      margin-top: 6px; width: 100%; padding: 5px; border-radius: 4px;
+      font-family: Georgia, serif; font-size: 0.7rem; cursor: pointer;
+      letter-spacing: 0.3px; transition: background 0.2s; border: none;
+    }
+    .btn-gold   { background: rgba(200,168,75,0.12); border: 1px solid #c8a84b55; color: #c8a84b; }
+    .btn-gold:hover { background: rgba(200,168,75,0.28); }
+    .btn-red    { background: rgba(231,76,60,0.1); border: 1px solid #e74c3c44; color: #e87060; }
+    .btn-red:hover  { background: rgba(231,76,60,0.25); }
+    .btn-purple { background: rgba(142,68,173,0.15); border: 1px solid #8e44ad66; color: #b090d8; }
+    .btn-purple:hover { background: rgba(142,68,173,0.3); }
+    .btn-green  { background: rgba(39,174,96,0.12); border: 1px solid #27ae6055; color: #5dbb80; }
+    .btn-green:hover  { background: rgba(39,174,96,0.28); }
+    .btn-blue   { background: rgba(41,128,185,0.12); border: 1px solid #2980b955; color: #5b9fcf; }
+    .btn-blue:hover   { background: rgba(41,128,185,0.28); }
+    .btn-teal   { background: rgba(22,160,133,0.12); border: 1px solid #16a08555; color: #4cc9b0; }
+    .btn-teal:hover   { background: rgba(22,160,133,0.28); }
+    .btn-hint   { display: block; font-size: 0.6rem; opacity: 0.6; margin-top: 1px; font-style: italic; }
+    .panel-section-title {
+      font-size: 0.67rem; color: #607888; letter-spacing: 1px; text-transform: uppercase;
+      margin-top: 10px; margin-bottom: 3px; padding-bottom: 3px;
+      border-bottom: 1px solid #c8a84b1a;
+    }
+
+    /* ── Barra tracciamento (flottante in basso al centro) ── */
+    #drawBar {
+      display: none;
+      position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%);
+      z-index: 2000;
+      background: rgba(10,22,40,0.97); border: 2px solid #8e44ad;
+      border-radius: 50px; padding: 10px 20px;
+      display: none; align-items: center; gap: 12px;
+      box-shadow: 0 4px 24px rgba(142,68,173,0.4);
+      min-width: 460px;
+    }
+    #drawBar.active { display: flex; }
+    .draw-indicator { width: 12px; height: 12px; border-radius: 50%; background: #8e44ad; animation: blink 1s infinite; flex-shrink: 0; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+    .draw-label { font-size: 0.78rem; color: #c8b0e8; white-space: nowrap; }
+    .draw-label b { color: #fff; }
+    #drawSegSelect {
+      background: rgba(142,68,173,0.2); border: 1px solid #8e44ad88;
+      color: #e8d5a3; border-radius: 6px; padding: 4px 8px; font-size: 0.72rem;
+      font-family: Georgia,serif; cursor: pointer; max-width: 180px;
+    }
+    #drawSegSelect option { background: #0d2447; }
+    #drawCountBadge {
+      background: #8e44ad; color: #fff; border-radius: 12px;
+      padding: 2px 9px; font-size: 0.7rem; font-weight: bold; flex-shrink: 0;
+    }
+    .draw-btn {
+      border: none; border-radius: 20px; padding: 5px 14px;
+      font-family: Georgia,serif; font-size: 0.72rem; cursor: pointer;
+      transition: all 0.2s;
+    }
+    .draw-btn-undo { background: rgba(200,168,75,0.2); color: #c8a84b; border: 1px solid #c8a84b55; }
+    .draw-btn-undo:hover { background: rgba(200,168,75,0.4); }
+    .draw-btn-stop { background: #c0392b; color: #fff; }
+    .draw-btn-stop:hover { background: #e74c3c; }
+
+    /* Cursore crosshair in modalità disegno */
+    .map-drawing-mode { cursor: crosshair !important; }
+    .map-drawing-mode .leaflet-interactive { cursor: crosshair !important; }
+
+    /* Note nav */
+    .nav-notes {
+      position: absolute; bottom: 32px; right: 10px; z-index: 1000;
+      background: rgba(10,22,40,0.94); border: 1px solid #c8a84b;
+      border-radius: 8px; padding: 9px 12px; width: 200px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5); font-size: 0.7rem;
+    }
+    .nav-notes h4 { color: #c8a84b; font-size: 0.72rem; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 5px; }
+    .nav-notes ul { list-style: none; }
+    .nav-notes li { color: #9ab0c8; padding: 1px 0; line-height: 1.4; }
+
+    /* Leaflet overrides */
+    .leaflet-control-layers { background: #0d2447 !important; border: 1px solid #c8a84b !important; border-radius: 6px !important; }
+    .leaflet-control-layers-base label, .leaflet-control-layers-overlays label { color: #e8d5a3 !important; }
+    .leaflet-control-layers-separator { border-color: #c8a84b33 !important; }
+    .leaflet-control-zoom a { background: #0d2447 !important; color: #c8a84b !important; border-color: #c8a84b55 !important; }
+    .leaflet-control-zoom a:hover { background: #1a3a6e !important; }
+    .leaflet-control-attribution { background: rgba(10,22,40,0.85) !important; color: #445566 !important; font-size: 0.62rem !important; }
+    .leaflet-control-attribution a { color: #667788 !important; }
+    .leaflet-popup-content-wrapper { background: #0d2447 !important; border: 1px solid #c8a84b !important; color: #e8d5a3 !important; border-radius: 6px !important; }
+    .leaflet-popup-tip { background: #0d2447 !important; }
+    .leaflet-popup-close-button { color: #c8a84b !important; }
+    .popup-title { font-weight: bold; font-size: 0.9rem; color: #c8a84b; margin-bottom: 3px; }
+    .popup-body  { font-size: 0.76rem; color: #a0b8d8; line-height: 1.5; }
+    .popup-warn  { font-size: 0.7rem; color: #e8c070; margin-top: 4px; }
+
+    footer {
+      background: #060f1f; border-top: 1px solid #c8a84b22;
+      padding: 4px 14px; font-size: 0.62rem; color: #334455;
+      display: flex; justify-content: space-between; align-items: center; flex-shrink: 0;
+    }
+    footer span { color: #c8a84b44; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-title">
+    <span style="font-size:24px;color:#c8a84b;">⚓</span>
+    <h1>Carta Nautica — Laguna di Venezia
+      <span>Scafoclub Marina → Petroli → Giudecca → Burano → rientro</span>
+    </h1>
+  </div>
+  <div class="header-stats">
+    <div><strong id="statNm">—</strong>miglia naut.</div>
+    <div><strong id="statKm">—</strong>km totali</div>
+    <div><strong id="statPts">—</strong>punti rotta</div>
+  </div>
+</header>
+
+<div id="map"></div>
+
+<!-- Barra tracciamento flottante -->
+<div id="drawBar">
+  <div class="draw-indicator"></div>
+  <span class="draw-label">Tracciamento attivo — inserisci dopo:</span>
+  <select id="drawSegSelect"></select>
+  <span id="drawCountBadge">0 punti</span>
+  <button class="draw-btn draw-btn-undo" onclick="undoLastTrace()">↩ Annulla ultimo</button>
+  <button class="draw-btn draw-btn-stop" onclick="stopDrawing()">■ Fine tracciamento</button>
+</div>
+
+<footer>
+  <div>Carta: © <span>OpenSeaMap</span> · Base: © <span>OpenStreetMap</span> contributors · Satellite: © <span>Esri</span></div>
+  <div>⚠ Uso orientativo — Navigare con le carte ufficiali IIM</div>
+</footer>
+
+<script>
+// Cattura il sorgente pulito PRIMA che Leaflet modifichi il DOM
+const _PAGE_TEMPLATE = document.documentElement.outerHTML;
+
+// ====================================================================
+// DATI: waypoint nominali (tappe principali)
+// ====================================================================
+const NAMED_WPS = [
+  { lat:45.4729, lng:12.2561, name:"Marina Scafoclub",      sub:"Partenza / Arrivo",                  note:"Via G. Paganello, 45 · Porto Marghera",                       warn:"Verificare orario di uscita",                       color:"#2ecc71", icon:"⚓" },
+  { lat:45.4480, lng:12.2820, name:"Canale dei Petroli",    sub:"Canale industriale profondo",         note:"Profondità fino a 15 m — riservato al traffico pesante",      warn:"Precedenza assoluta alle petroliere",                color:"#e74c3c", icon:"🛢" },
+  { lat:45.4280, lng:12.3240, name:"Canale della Giudecca", sub:"Imbocco canale principale",           note:"Canale largo e trafficato",                                    warn:"Vaporetti, cruise ships — massima attenzione",       color:"#9b59b6", icon:"🚢" },
+  { lat:45.4330, lng:12.3420, name:"Bacino di San Marco",   sub:"Bacino antistante San Marco",         note:"Altissima densità di traffico",                               warn:"Vaporetti, gondole, taxi acquei — bassa velocità",    color:"#f39c12", icon:"🏛" },
+  { lat:45.4290, lng:12.3680, name:"Sant'Elena",            sub:"Punta orientale di Venezia",          note:"Uscita verso laguna nord — canale Quintavalle",               warn:"Fondali variabili — seguire i canali segnati",        color:"#3498db", icon:"⛵" },
+  { lat:45.4560, lng:12.4020, name:"Bacan",                 sub:"Spiaggia di Sant'Erasmo",             note:"Bassa laguna — fondale sabbioso",                             warn:"Seccagne nelle basse maree — attenzione",             color:"#e67e22", icon:"🏖" },
+  { lat:45.4970, lng:12.4180, name:"Torcello",              sub:"Isola storica · laguna nord",         note:"Canale di Torcello — passaggio obbligato",                   warn:"Fondale basso in laguna aperta",                      color:"#e74c3c", icon:"⛪" },
+  { lat:45.4853, lng:12.4166, name:"Burano",                sub:"Isola del merletto",                  note:"Ormeggio disponibile",                                        warn:"Canale di Burano — segnaletica locale",               color:"#1abc9c", icon:"🌈" },
+  { lat:45.4840, lng:12.2540, name:"Parco San Giuliano",    sub:"Rientro via laguna nord-ovest",       note:"Traversata verso Mestre — canale di San Giuliano",           warn:"Bassa laguna — seguire i canali nel rientro",         color:"#16a085", icon:"🌿" }
+];
+
+// Struttura dati: array di segmenti.
+// Ogni segmento va dal named[i] al named[i+1].
+// tracePoints[i] = array di {lat,lng} inseriti tra named[i] e named[i+1]
+// Ultimo segmento: named[last] → named[0] (ritorno)
+let namedWps = [{"lat":45.4729,"lng":12.2561,"name":"Marina Scafoclub","sub":"Partenza / Arrivo","note":"Via G. Paganello, 45 · Porto Marghera","warn":"Verificare orario di uscita","color":"#2ecc71","icon":"⚓"},{"lat":45.45675845282199,"lng":12.261686325073244,"name":"Canale dei Petroli","sub":"Canale industriale profondo","note":"Profondità fino a 15 m — riservato al traffico pesante","warn":"Precedenza assoluta alle petroliere","color":"#e74c3c","icon":"🛢"},{"lat":45.428,"lng":12.324,"name":"Canale della Giudecca","sub":"Imbocco canale principale","note":"Canale largo e trafficato","warn":"Vaporetti, cruise ships — massima attenzione","color":"#9b59b6","icon":"🚢"},{"lat":45.433,"lng":12.342,"name":"Bacino di San Marco","sub":"Bacino antistante San Marco","note":"Altissima densità di traffico","warn":"Vaporetti, gondole, taxi acquei — bassa velocità","color":"#f39c12","icon":"🏛"},{"lat":45.429,"lng":12.368,"name":"Sant'Elena","sub":"Punta orientale di Venezia","note":"Uscita verso laguna nord — canale Quintavalle","warn":"Fondali variabili — seguire i canali segnati","color":"#3498db","icon":"⛵"},{"lat":45.44449083980769,"lng":12.392878532409668,"name":"Bacan","sub":"Spiaggia di Sant'Erasmo","note":"Bassa laguna — fondale sabbioso","warn":"Seccagne nelle basse maree — attenzione","color":"#e67e22","icon":"🏖"},{"lat":45.496503623828765,"lng":12.414958477020265,"name":"Torcello","sub":"Isola storica · laguna nord","note":"Canale di Torcello — passaggio obbligato","warn":"Fondale basso in laguna aperta","color":"#e74c3c","icon":"⛪"},{"lat":45.48495871870084,"lng":12.416374683380129,"name":"Burano","sub":"Isola del merletto","note":"Ormeggio disponibile","warn":"Canale di Burano — segnaletica locale","color":"#1abc9c","icon":"🌈"},{"lat":45.46500619941169,"lng":12.282886505126955,"name":"Parco San Giuliano","sub":"Rientro via laguna nord-ovest","note":"Traversata verso Mestre — canale di San Giuliano","warn":"Bassa laguna — seguire i canali nel rientro","color":"#16a085","icon":"🌿"}];
+let tracePts = [[{"lat":45.47163952561759,"lng":12.2592830657959},{"lat":45.47225614075724,"lng":12.263660430908205},{"lat":45.471413941006325,"lng":12.264025211334229},{"lat":45.46912788515583,"lng":12.263252735137941},{"lat":45.46711246954409,"lng":12.261686325073244}],[{"lat":45.45150562782291,"lng":12.271471023559572},{"lat":45.44458457330565,"lng":12.283058166503908},{"lat":45.4370607247732,"lng":12.295589447021486},{"lat":45.43092052097982,"lng":12.306318283081056},{"lat":45.43013789798738,"lng":12.315158843994142}],[{"lat":45.427248119084425,"lng":12.334814071655273}],[{"lat":45.43022880723896,"lng":12.35142230987549},{"lat":45.42369650260912,"lng":12.359318733215334},{"lat":45.42237188783343,"lng":12.3656702041626},{"lat":45.424057755790436,"lng":12.37339496612549},{"lat":45.42767016046125,"lng":12.37588405609131}],[{"lat":45.43140273576725,"lng":12.37764358520508},{"lat":45.433901015203816,"lng":12.383308410644533},{"lat":45.43609820571086,"lng":12.388930320739748},{"lat":45.43609820571086,"lng":12.393307685852053},{"lat":45.437904051664425,"lng":12.395281791687012},{"lat":45.43986031956471,"lng":12.394938468933107},{"lat":45.44166604511945,"lng":12.394723892211916},{"lat":45.44332124277652,"lng":12.392921447753906}],[{"lat":45.44624934345919,"lng":12.390174865722656},{"lat":45.448205322008846,"lng":12.38961696624756},{"lat":45.4500709614244,"lng":12.387943267822267},{"lat":45.45196662858929,"lng":12.386054992675783},{"lat":45.4543367977226,"lng":12.38459587097168},{"lat":45.454818206624445,"lng":12.386655807495119},{"lat":45.45499873390313,"lng":12.388973236083986},{"lat":45.45455849959255,"lng":12.39062547683716},{"lat":45.45586731529728,"lng":12.392084598541262},{"lat":45.456393841782585,"lng":12.39264249801636},{"lat":45.45640888532423,"lng":12.393779754638674},{"lat":45.456258449727365,"lng":12.394981384277346},{"lat":45.45609297010726,"lng":12.39588260650635},{"lat":45.456168188176584,"lng":12.397942543029785},{"lat":45.4565894075107,"lng":12.399208545684814},{"lat":45.45723627393335,"lng":12.399787902832033},{"lat":45.45825921033935,"lng":12.399938106536867},{"lat":45.45862024228734,"lng":12.400538921356203},{"lat":45.458364511562976,"lng":12.40182638168335},{"lat":45.4583488220926,"lng":12.405388355255129},{"lat":45.45872489639055,"lng":12.407362461090088},{"lat":45.459371738315674,"lng":12.409508228302004},{"lat":45.460244211017994,"lng":12.41086006164551},{"lat":45.46123700836051,"lng":12.412533760070803},{"lat":45.46256071095679,"lng":12.413177490234377},{"lat":45.46371892523442,"lng":12.413456439971926},{"lat":45.46507910726004,"lng":12.41459369659424},{"lat":45.46601165558601,"lng":12.415237426757814},{"lat":45.46775638198905,"lng":12.418928146362306},{"lat":45.469470974288946,"lng":12.421159744262697},{"lat":45.471361521569655,"lng":12.422297000885012},{"lat":45.47271506482552,"lng":12.422640323638918},{"lat":45.474023459073095,"lng":12.423155307769775},{"lat":45.47546716919763,"lng":12.421867847442629},{"lat":45.47755775483832,"lng":12.420473098754885},{"lat":45.478264531545264,"lng":12.419142723083496},{"lat":45.478279569251235,"lng":12.417147159576418},{"lat":45.48050510548354,"lng":12.416374683380129},{"lat":45.482805736340744,"lng":12.416911125183105},{"lat":45.48294106464202,"lng":12.418885231018068},{"lat":45.483768063864375,"lng":12.420558929443361},{"lat":45.48486569862807,"lng":12.421867847442629},{"lat":45.48657977041391,"lng":12.421159744262697},{"lat":45.487860971106656,"lng":12.4206018447876},{"lat":45.48796621703519,"lng":12.417511940002443},{"lat":45.48871796794877,"lng":12.415194511413576},{"lat":45.49029661221008,"lng":12.413392066955568},{"lat":45.49172487127371,"lng":12.41332769393921},{"lat":45.492581809326815,"lng":12.412984371185303},{"lat":45.49355900347515,"lng":12.412533760070803},{"lat":45.49423138195524,"lng":12.412249445915222},{"lat":45.49483271659314,"lng":12.412152886390688},{"lat":45.49506949034488,"lng":12.412700057029726},{"lat":45.49533257112369,"lng":12.41382658481598},{"lat":45.495971476469755,"lng":12.414132356643679},{"lat":45.49633602509566,"lng":12.41484582424164}],[{"lat":45.49633602509566,"lng":12.41484582424164},{"lat":45.495971476469755,"lng":12.414132356643679},{"lat":45.49533257112369,"lng":12.41382658481598},{"lat":45.49506949034488,"lng":12.412700057029726},{"lat":45.49483271659314,"lng":12.412152886390688},{"lat":45.49423138195524,"lng":12.412249445915222},{"lat":45.49355900347515,"lng":12.412533760070803},{"lat":45.492581809326815,"lng":12.412984371185303},{"lat":45.49172487127371,"lng":12.41332769393921},{"lat":45.49029661221008,"lng":12.413392066955568},{"lat":45.48871796794877,"lng":12.415194511413576},{"lat":45.48796621703519,"lng":12.417511940002443},{"lat":45.487860971106656,"lng":12.4206018447876},{"lat":45.48657977041391,"lng":12.421159744262697},{"lat":45.48486569862807,"lng":12.421867847442629},{"lat":45.483768063864375,"lng":12.420558929443361},{"lat":45.482805736340744,"lng":12.416911125183105},{"lat":45.48294106464202,"lng":12.418885231018068},{"lat":45.48327341577357,"lng":12.418144941329958},{"lat":45.48401395218587,"lng":12.417281270027162}],[{"lat":45.48546044171081,"lng":12.415430545806885},{"lat":45.48465602133993,"lng":12.41456151008606},{"lat":45.48486652497653,"lng":12.41403579711914},{"lat":45.48520483274459,"lng":12.413499355316164},{"lat":45.4857536388027,"lng":12.412748336791994},{"lat":45.48630243951421,"lng":12.412050962448122},{"lat":45.48648285016718,"lng":12.411675453186035},{"lat":45.485189781076194,"lng":12.409186363220217},{"lat":45.48462314556008,"lng":12.408328056335451},{"lat":45.483835364651426,"lng":12.40679383277893},{"lat":45.48331661263264,"lng":12.405956983566286},{"lat":45.48306099393907,"lng":12.405238151550295},{"lat":45.48302339502292,"lng":12.403435707092285},{"lat":45.482842957479335,"lng":12.402276992797853},{"lat":45.48242193429692,"lng":12.40111827850342},{"lat":45.482121201525985,"lng":12.400174140930178},{"lat":45.4816099521313,"lng":12.398457527160646},{"lat":45.48115884587156,"lng":12.396225929260256},{"lat":45.479775430819636,"lng":12.394423484802248},{"lat":45.47824160485976,"lng":12.392706871032715},{"lat":45.47736941069268,"lng":12.39189147949219},{"lat":45.476587432030634,"lng":12.39034652709961},{"lat":45.47583551923729,"lng":12.388715744018556},{"lat":45.474752747188866,"lng":12.387213706970215},{"lat":45.473970732215285,"lng":12.386441230773928},{"lat":45.472436748247304,"lng":12.384166717529299},{"lat":45.47153438523248,"lng":12.382535934448242},{"lat":45.47030113241394,"lng":12.379102706909181},{"lat":45.46960929584716,"lng":12.37708568572998},{"lat":45.468915376954286,"lng":12.375926971435549},{"lat":45.46717068642484,"lng":12.375755310058596},{"lat":45.46524544799767,"lng":12.376098632812502},{"lat":45.46313964317962,"lng":12.37541198730469},{"lat":45.46211679531491,"lng":12.373695373535158},{"lat":45.460793082296114,"lng":12.371292114257812},{"lat":45.459950703284505,"lng":12.368545532226564},{"lat":45.459469338198694,"lng":12.365026473999025},{"lat":45.45862693940983,"lng":12.362279891967775},{"lat":45.4574836637802,"lng":12.360992431640625},{"lat":45.45591914377562,"lng":12.359790802001955},{"lat":45.45477581324465,"lng":12.359275817871096},{"lat":45.45371965903179,"lng":12.358589172363281},{"lat":45.45284796375711,"lng":12.357730865478517},{"lat":45.452260323274736,"lng":12.354834079742433},{"lat":45.45089124384283,"lng":12.351100444793703},{"lat":45.45063550999483,"lng":12.347967624664308},{"lat":45.4490256634884,"lng":12.34069347381592},{"lat":45.44852915950081,"lng":12.337646484375002},{"lat":45.44964501669376,"lng":12.331123352050783},{"lat":45.44922374548983,"lng":12.322540283203127},{"lat":45.44735807805143,"lng":12.316532135009767},{"lat":45.448321010886424,"lng":12.311639785766603},{"lat":45.45211239913178,"lng":12.304687500000002},{"lat":45.459642571398,"lng":12.290525436401369},{"lat":45.46415519388022,"lng":12.28301525115967}],[{"lat":45.4658309566069,"lng":12.28099822998047},{"lat":45.46650779870608,"lng":12.279624938964846},{"lat":45.46728991723267,"lng":12.27801561355591},{"lat":45.46819234820196,"lng":12.276062965393066},{"lat":45.46894436297334,"lng":12.274475097656252},{"lat":45.46957604762774,"lng":12.273058891296388},{"lat":45.46963620770178,"lng":12.272200584411623},{"lat":45.46941060709298,"lng":12.271363735198976},{"lat":45.46944068722631,"lng":12.270183563232424},{"lat":45.46966628771476,"lng":12.268660068511965},{"lat":45.47055380843697,"lng":12.26629972457886},{"lat":45.47127571256432,"lng":12.26479768753052},{"lat":45.47225614075724,"lng":12.263660430908205},{"lat":45.47163952561759,"lng":12.2592830657959}]];
+
+// Stato disegno
+let drawMode    = false;
+let showTracePts = false; // pannello: mostra/nascondi punti intermedi
+let drawSegIdx  = 0; // dopo quale named waypoint stiamo inserendo
+let drawSession = 0; // conta quanti punti aggiunti in questa sessione
+
+// ====================================================================
+// MAPPA
+// ====================================================================
+const map = L.map('map', { center:[45.455,12.340], zoom:12, zoomControl:false, doubleClickZoom:false });
+L.control.zoom({ position:'topright' }).addTo(map);
+
+const osm      = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{ attribution:'© OpenStreetMap contributors', maxZoom:19 });
+const sat      = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{ attribution:'© Esri', maxZoom:19 });
+const seamarks = L.tileLayer('https://tiles.openseamap.org/seamark/{z}/{x}/{y}.png',{ attribution:'© OpenSeaMap', maxZoom:18 });
+
+osm.addTo(map); seamarks.addTo(map);
+L.control.layers({"🗺 OpenStreetMap":osm,"🛰 Satellite":sat},{"⚓ Segnali nautici (OpenSeaMap)":seamarks},{position:'topright'}).addTo(map);
+map.on('baselayerchange', () => setTimeout(() => { if(map.hasLayer(seamarks)) seamarks.bringToFront(); },150));
+
+// ====================================================================
+// LAYER DINAMICI
+// ====================================================================
+const shadowLayer = L.polyline([],{ color:'#000', weight:7, opacity:0.2, lineJoin:'round' }).addTo(map);
+const routeLayer  = L.polyline([],{ color:'#f1c40f', weight:3, opacity:0.92, dashArray:'10,6', lineJoin:'round' }).addTo(map);
+const arrowGroup  = L.layerGroup().addTo(map);
+const namedGroup  = L.layerGroup().addTo(map);
+const traceGroup  = L.layerGroup().addTo(map);
+
+// ====================================================================
+// UTILITÀ GEOMETRIA
+// ====================================================================
+function haversine(a,b){
+  const R=6371,r=Math.PI/180,dLat=(b.lat-a.lat)*r,dLng=(b.lng-a.lng)*r;
+  const x=Math.sin(dLat/2)**2+Math.cos(a.lat*r)*Math.cos(b.lat*r)*Math.sin(dLng/2)**2;
+  return R*2*Math.atan2(Math.sqrt(x),Math.sqrt(1-x));
+}
+function bearing(a,b){
+  const dLng=(b.lng-a.lng)*Math.PI/180,la=a.lat*Math.PI/180,lb=b.lat*Math.PI/180;
+  const y=Math.sin(dLng)*Math.cos(lb), x=Math.cos(la)*Math.sin(lb)-Math.sin(la)*Math.cos(lb)*Math.cos(dLng);
+  return(Math.atan2(y,x)*180/Math.PI+360)%360;
+}
+
+// Costruisce l'array piatto di coordinate nell'ordine: named[0], ...trace[0], named[1], ...trace[1], ..., named[0]
+function buildFullCoords(){
+  const pts=[];
+  for(let i=0;i<namedWps.length;i++){
+    pts.push({ lat:namedWps[i].lat, lng:namedWps[i].lng });
+    for(const tp of tracePts[i]) pts.push({ lat:tp.lat, lng:tp.lng });
+  }
+  pts.push({ lat:namedWps[0].lat, lng:namedWps[0].lng }); // chiude
+  return pts;
+}
+
+function calcTotalKm(){
+  const pts=buildFullCoords(); let total=0;
+  for(let i=0;i<pts.length-1;i++) total+=haversine(pts[i],pts[i+1]);
+  return total;
+}
+
+// ====================================================================
+// RIDISEGNO ROTTA + FRECCE
+// ====================================================================
+function redrawRoute(){
+  const pts=buildFullCoords();
+  const coords=pts.map(p=>[p.lat,p.lng]);
+  shadowLayer.setLatLngs(coords);
+  routeLayer.setLatLngs(coords);
+
+  arrowGroup.clearLayers();
+  for(let i=0;i<coords.length-1;i++){
+    const mid=[(coords[i][0]+coords[i+1][0])/2,(coords[i][1]+coords[i+1][1])/2];
+    const b=bearing({lat:coords[i][0],lng:coords[i][1]},{lat:coords[i+1][0],lng:coords[i+1][1]});
+    L.marker(mid,{
+      icon:L.divIcon({ className:'', html:`<div style="transform:rotate(${b-90}deg);color:#f1c40f;font-size:14px;text-shadow:0 0 4px #000;line-height:1;pointer-events:none;">➤</div>`, iconSize:[14,14], iconAnchor:[7,7] }),
+      interactive:false
+    }).addTo(arrowGroup);
+  }
+
+  const total=calcTotalKm();
+  document.getElementById('statNm').textContent=`~${(total*0.539957).toFixed(1)}`;
+  document.getElementById('statKm').textContent=`~${total.toFixed(0)}`;
+  document.getElementById('statPts').textContent=pts.length-1; // escludi duplicato finale
+}
+
+// ====================================================================
+// MARKER NOMINALI (trascinabili)
+// ====================================================================
+const namedMarkers=[];
+
+function makeNamedIcon(wp, isFirst){
+  const sz=isFirst?44:34, fSz=isFirst?'17px':'13px';
+  return L.divIcon({
+    className:'',
+    html:`<div style="width:${sz}px;height:${sz}px;background:${wp.color};border:3px solid rgba(255,255,255,0.9);border-radius:50% 50% 50% 0;transform:rotate(-45deg);box-shadow:0 3px 10px rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center;cursor:grab;">
+            <span style="transform:rotate(45deg);font-size:${fSz};line-height:1;">${wp.icon}</span>
+          </div>`,
+    iconSize:[sz,sz], iconAnchor:[sz/2,sz], popupAnchor:[0,-sz-4]
+  });
+}
+
+function buildNamedMarkers(){
+  namedGroup.clearLayers(); namedMarkers.length=0;
+  namedWps.forEach((wp,i)=>{
+    const m=L.marker([wp.lat,wp.lng],{ icon:makeNamedIcon(wp,i===0), draggable:true, autoPan:true });
+    m.bindPopup(`<div class="popup-title">${wp.icon} ${wp.name}</div>
+      <div class="popup-body"><b style="color:#9ab0c8">${wp.sub}</b><br>${wp.note}</div>
+      <div class="popup-warn">⚠ ${wp.warn}</div>`,{maxWidth:270});
+    m.on('dragstart',()=>{ m.closePopup(); map.dragging.disable(); });
+    m.on('drag',(e)=>{ const ll=e.target.getLatLng(); namedWps[i].lat=ll.lat; namedWps[i].lng=ll.lng; redrawRoute(); });
+    m.on('dragend',(e)=>{ const ll=e.target.getLatLng(); namedWps[i].lat=ll.lat; namedWps[i].lng=ll.lng; map.dragging.enable(); redrawRoute(); buildPanel(); });
+    m.addTo(namedGroup);
+    namedMarkers.push(m);
+  });
+}
+
+// ====================================================================
+// MARKER DI TRACCIAMENTO (piccoli pallini viola)
+// ====================================================================
+function makeTraceIcon(){ return L.circleMarker([0,0],{ radius:5, color:'#fff', weight:1.5, fillColor:'#8e44ad', fillOpacity:0.9 }); }
+
+function buildTraceMarkers(){
+  traceGroup.clearLayers();
+  namedWps.forEach((_,segIdx)=>{
+    tracePts[segIdx].forEach((tp,ptIdx)=>{
+      const cm=L.circleMarker([tp.lat,tp.lng],{ radius:5, color:'#fff', weight:1.5, fillColor:'#8e44ad', fillOpacity:0.9, draggable:true });
+      cm.bindTooltip(`Punto ${ptIdx+1} (dopo ${namedWps[segIdx].name})<br><small>Doppio clic per eliminare</small>`,{direction:'top',opacity:0.9});
+      cm.on('drag',(e)=>{ const ll=e.target.getLatLng(); tracePts[segIdx][ptIdx].lat=ll.lat; tracePts[segIdx][ptIdx].lng=ll.lng; redrawRoute(); });
+      cm.on('dragend',()=>{ redrawRoute(); buildPanel(); });
+      cm.on('dblclick',()=>{ tracePts[segIdx].splice(ptIdx,1); rebuild(); });
+      cm.addTo(traceGroup);
+    });
+  });
+}
+
+// ====================================================================
+// PANNELLO LATERALE
+// ====================================================================
+const panel=document.createElement('div'); panel.className='side-panel'; document.body.appendChild(panel);
+
+function toggleTracePts(){ showTracePts=!showTracePts; buildPanel(); }
+
+function buildPanel(){
+  const totalTrace = tracePts.reduce((s,a)=>s+a.length,0);
+  const toggleLabel = showTracePts ? '▲ Nascondi punti' : `▼ Mostra punti (${totalTrace})`;
+  let html=`<div class="panel-title" style="display:flex;align-items:center;justify-content:space-between;">
+    <span>⚓ Rotta — ${buildFullCoords().length-1} pt</span>
+    <button onclick="toggleTracePts()" style="font-size:0.62rem;background:rgba(200,168,75,0.15);border:1px solid #c8a84b44;color:#c8a84b;border-radius:4px;padding:2px 6px;cursor:pointer;">${toggleLabel}</button>
+  </div>`;
+
+  namedWps.forEach((wp,i)=>{
+    const next=namedWps[(i+1)%namedWps.length];
+    const segPts=[wp,...tracePts[i],next];
+    let segKm=0;
+    for(let k=0;k<segPts.length-1;k++) segKm+=haversine(segPts[k],segPts[k+1]);
+
+    html+=`<div class="tappa-main" onclick="focusNamed(${i})">
+      <div>
+        <div class="tappa-num" style="background:${wp.color};">${i+1}</div>
+        ${i<namedWps.length-1?'<div class="connector-line"></div>':''}
+      </div>
+      <div>
+        <div class="tappa-name">${wp.icon} ${wp.name}</div>
+        <div class="tappa-sub">${wp.sub}</div>
+        <div class="tappa-dist">→ ${namedWps[(i+1)%namedWps.length].name}: ${segKm.toFixed(1)} km${tracePts[i].length>0?` (${tracePts[i].length} pt)`:''}</div>
+      </div>
+    </div>`;
+
+    // Mostra punti tracciati di questo segmento (solo se toggle attivo)
+    if(showTracePts && tracePts[i].length>0){
+      html+=`<div class="trace-points-group">`;
+      tracePts[i].forEach((tp,j)=>{
+        html+=`<div class="trace-pt" onclick="focusTrace(${i},${j})">
+          <div class="trace-pt-dot"></div>
+          <span>pt ${j+1} — ${tp.lat.toFixed(4)}, ${tp.lng.toFixed(4)}</span>
+          <span class="trace-pt-del" onclick="event.stopPropagation();deleteTrace(${i},${j})">✕</span>
+        </div>`;
+      });
+      html+=`</div>`;
+    }
+  });
+
+  const total=calcTotalKm();
+  html+=`<div class="total-dist">Distanza totale<br><strong>~${(total*0.539957).toFixed(1)} nm (~${total.toFixed(0)} km)</strong></div>`;
+
+  html+=`<div class="panel-section-title">✏️ Modifica rotta</div>`;
+  html+=`<button class="panel-btn btn-purple" onclick="startDrawing()">✏️ Modalità tracciamento</button>`;
+  html+=`<button class="panel-btn btn-red" onclick="clearAllTrace()">🗑 Cancella punti tracciati</button>`;
+  html+=`<button class="panel-btn btn-gold" onclick="resetAll()">↩ Ripristina rotta originale</button>`;
+
+  html+=`<div class="panel-section-title">💾 Salva / Condividi</div>`;
+  html+=`<button class="panel-btn btn-green" onclick="exportGPX()">⬇ Esporta GPX <span class="btn-hint">Navionics · GPS · OpenCPN</span></button>`;
+  html+=`<button class="panel-btn btn-blue"  onclick="exportHTML()">⬇ Salva mappa completa <span class="btn-hint">HTML · apri nel browser</span></button>`;
+  html+=`<label class="panel-btn btn-teal" style="cursor:pointer;display:block;text-align:center;margin-top:6px;">⬆ Carica rotta GPX <span class="btn-hint">importa file .gpx</span><input type="file" accept=".gpx" style="display:none" onchange="importGPX(event)"></label>`;
+
+  html+=`<div style="margin-top:6px;padding:5px 7px;background:rgba(231,76,60,0.08);border:1px solid #e74c3c33;border-radius:4px;font-size:0.65rem;color:#a08080;line-height:1.4;">⚠ Uso orientativo. Usa le carte IIM ufficiali.</div>`;
+
+  panel.innerHTML=html;
+}
+
+// ====================================================================
+// MODALITÀ TRACCIAMENTO
+// ====================================================================
+function updateDrawSelect(){
+  const sel=document.getElementById('drawSegSelect');
+  sel.innerHTML=namedWps.map((w,i)=>`<option value="${i}" ${i===drawSegIdx?'selected':''}>Dopo: ${w.name}</option>`).join('');
+  sel.onchange=()=>{ drawSegIdx=parseInt(sel.value); drawSession=0; updateDrawCount(); };
+}
+
+function updateDrawCount(){
+  const el=document.getElementById('drawCountBadge');
+  if(el) el.textContent=`+${drawSession} punti`;
+}
+
+window.startDrawing=function(){
+  drawMode=true; drawSession=0;
+  document.getElementById('drawBar').classList.add('active');
+  document.getElementById('map').classList.add('map-drawing-mode');
+  updateDrawSelect();
+  updateDrawCount();
+};
+
+window.stopDrawing=function(){
+  drawMode=false;
+  document.getElementById('drawBar').classList.remove('active');
+  document.getElementById('map').classList.remove('map-drawing-mode');
+  buildPanel();
+};
+
+window.undoLastTrace=function(){
+  if(tracePts[drawSegIdx].length>0 && drawSession>0){
+    tracePts[drawSegIdx].pop(); drawSession--;
+    redrawRoute(); buildTraceMarkers(); updateDrawCount();
+  }
+};
+
+// Click sulla mappa: in draw mode aggiunge un punto
+map.on('click',(e)=>{
+  if(!drawMode) return;
+  const pt={ lat:e.latlng.lat, lng:e.latlng.lng };
+  tracePts[drawSegIdx].push(pt);
+  drawSession++;
+  updateDrawCount();
+  redrawRoute();
+  buildTraceMarkers();
+});
+
+// Doppio clic fuori draw mode: niente (doubleClickZoom è disabilitato)
+
+// ====================================================================
+// NOTE DI NAVIGAZIONE
+// ====================================================================
+const navNotes=document.createElement('div'); navNotes.className='nav-notes'; document.body.appendChild(navNotes);
+navNotes.innerHTML=`<h4>📋 Note di nav.</h4><ul>
+  <li>🌊 Controlla maree (titolomare.it)</li>
+  <li>⚡ Fondali bassi fuori dai canali</li>
+  <li>🚤 Limite 5 kn nei canali interni</li>
+  <li>🔴 Segnaletica rossa/verde lagunare</li>
+  <li>🛢 Precedenza nel Canale dei Petroli</li>
+  <li>🚢 Attenzione alle navi in Giudecca</li>
+  <li>📡 VHF ch. 16 sempre acceso</li>
+</ul>`;
+
+// ====================================================================
+// FOCUS E AZIONI
+// ====================================================================
+window.focusNamed=function(i){ map.setView([namedWps[i].lat,namedWps[i].lng],14,{animate:true}); namedMarkers[i]?.openPopup(); };
+window.focusTrace=function(si,pi){ const tp=tracePts[si][pi]; if(tp) map.setView([tp.lat,tp.lng],16,{animate:true}); };
+window.deleteTrace=function(si,pi){ tracePts[si].splice(pi,1); rebuild(); };
+
+window.clearAllTrace=function(){
+  if(!confirm('Cancellare tutti i punti tracciati manualmente?')) return;
+  tracePts=namedWps.map(()=>[]); rebuild();
+};
+
+window.resetAll=function(){
+  if(!confirm('Ripristinare la rotta originale? Tutte le modifiche saranno perse.')) return;
+  namedWps=NAMED_WPS.map(w=>({...w})); tracePts=namedWps.map(()=>[]); rebuild();
+  map.fitBounds(routeLayer.getBounds(),{padding:[230,30]});
+};
+
+// ====================================================================
+// REBUILD COMPLETO
+// ====================================================================
+function rebuild(){ redrawRoute(); buildPanel(); buildNamedMarkers(); buildTraceMarkers(); }
+
+// ====================================================================
+// EXPORT GPX
+// ====================================================================
+window.exportGPX=function(){
+  const pts=buildFullCoords();
+  const now=new Date().toISOString();
+  let gpx=`<?xml version="1.0" encoding="UTF-8"?>
+<gpx version="1.1" creator="Carta Nautica Laguna Venezia" xmlns="http://www.topografix.com/GPX/1/1">
+  <metadata><name>Rotta Laguna di Venezia</name><time>${now}</time></metadata>
+  <rte>
+    <name>Rotta Laguna Venezia</name>\n`;
+  namedWps.forEach((wp,i)=>{
+    gpx+=`    <rtept lat="${wp.lat.toFixed(6)}" lon="${wp.lng.toFixed(6)}"><name>${wp.name}</name><desc>${wp.sub}</desc></rtept>\n`;
+    (tracePts[i]||[]).forEach((tp,j)=>{
+      gpx+=`    <rtept lat="${tp.lat.toFixed(6)}" lon="${tp.lng.toFixed(6)}"><name>Pt ${j+1} (dopo ${wp.name})</name></rtept>\n`;
+    });
+  });
+  gpx+=`    <rtept lat="${namedWps[0].lat.toFixed(6)}" lon="${namedWps[0].lng.toFixed(6)}"><name>${namedWps[0].name} (rientro)</name></rtept>\n  </rte>\n`;
+  gpx+=`  <trk><name>Traccia Laguna Venezia</name><trkseg>\n`;
+  pts.forEach(p=>{ gpx+=`    <trkpt lat="${p.lat.toFixed(6)}" lon="${p.lng.toFixed(6)}"></trkpt>\n`; });
+  gpx+=`  </trkseg></trk>\n</gpx>`;
+  dlFile('rotta_laguna_venezia.gpx', gpx, 'application/gpx+xml');
+  toast('📥 GPX scaricato! Importalo in Navionics, Google Earth o OpenCPN.', 4000);
+};
+
+// ====================================================================
+// EXPORT HTML (mappa con rotta incorporata)
+// ====================================================================
+window.exportHTML=function(){
+  // Usa il sorgente catturato prima che Leaflet modificasse il DOM,
+  // poi sostituisce solo i dati con i valori attuali (regex su riga singola).
+  let src=_PAGE_TEMPLATE;
+  src=src.replace(/let namedWps = \[.*\];/, 'let namedWps = '+JSON.stringify(namedWps)+';');
+  src=src.replace(/let tracePts = \[.*\];/, 'let tracePts = '+JSON.stringify(tracePts)+';');
+  dlFile('mappa_rotta_venezia_salvata.html', src, 'text/html');
+  toast('📥 Mappa HTML scaricata con la tua rotta! Mandala a chi vuoi, si apre nel browser.', 5000);
+};
+
+// ====================================================================
+// IMPORT GPX
+// ====================================================================
+window.importGPX=function(evt){
+  const file=evt.target.files[0]; if(!file) return;
+  const reader=new FileReader();
+  reader.onload=function(e){
+    const doc=new DOMParser().parseFromString(e.target.result,'application/xml');
+    // Prova prima rtept (route), poi trkpt (track)
+    const nodes=[...doc.querySelectorAll('rtept')].length
+      ? [...doc.querySelectorAll('rtept')]
+      : [...doc.querySelectorAll('trkpt')];
+    const pts=nodes.map((p,i)=>({
+      lat:parseFloat(p.getAttribute('lat')),
+      lng:parseFloat(p.getAttribute('lon')),
+      name:p.querySelector('name')?.textContent||`Punto ${i+1}`,
+      sub:'Importato da GPX', note:'', warn:'',
+      color:'#8e44ad', icon:'📍'
+    })).filter(p=>!isNaN(p.lat)&&!isNaN(p.lng));
+    if(!pts.length){ toast('⚠ Nessun punto trovato nel file GPX.',3000); return; }
+    namedWps.length=0; pts.forEach(p=>namedWps.push(p));
+    tracePts.length=0; namedWps.forEach(()=>tracePts.push([]));
+    rebuild();
+    map.fitBounds(routeLayer.getBounds(),{padding:[230,30]});
+    toast(`✅ GPX importato: ${pts.length} punti caricati.`, 3000);
+  };
+  reader.readAsText(file);
+  evt.target.value='';
+};
+
+// ====================================================================
+// UTILITÀ: DOWNLOAD E TOAST
+// ====================================================================
+function dlFile(name,content,mime){
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([content],{type:mime}));
+  a.download=name; document.body.appendChild(a); a.click();
+  setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); },4000);
+}
+
+let _toastTimer=null;
+function toast(msg,dur=3000){
+  let el=document.getElementById('_toast');
+  if(!el){
+    el=document.createElement('div'); el.id='_toast';
+    el.style.cssText='position:fixed;bottom:44px;left:50%;transform:translateX(-50%);background:rgba(13,36,71,0.97);border:1px solid #c8a84b;color:#e8d5a3;padding:9px 18px;border-radius:22px;font-size:0.78rem;z-index:9999;box-shadow:0 4px 18px rgba(0,0,0,0.5);transition:opacity .3s;pointer-events:none;max-width:88vw;text-align:center;line-height:1.4;';
+    document.body.appendChild(el);
+  }
+  el.textContent=msg; el.style.opacity='1';
+  clearTimeout(_toastTimer);
+  _toastTimer=setTimeout(()=>el.style.opacity='0', dur);
+}
+
+// ====================================================================
+// AVVIO
+// ====================================================================
+rebuild();
+map.fitBounds(routeLayer.getBounds(),{padding:[230,30]});
+</script>
+</body>
+</html>
