@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Flettner Rotor - Giovanni Sambo</title>
+  <title>Flettner Rotor - MSc Thesis - Giovanni Sambo</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
@@ -17,183 +17,254 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --bg: #0c0e12;
-      --accent: #c8a96e;
-      --text: #e8e4dc;
-      --text-muted: #8a8680;
+      --bg: #0c0e12; --bg2: #13161c; --bg3: #1a1e26;
+      --accent: #c8a96e; --text: #e8e4dc; --text-muted: #8a8680;
       --border: rgba(200,169,110,0.15);
-      --mono: 'Space Mono', monospace;
-      --sans: 'DM Sans', sans-serif;
+      --mono: 'Space Mono', monospace; --sans: 'DM Sans', sans-serif;
     }
-    html, body { height: 100%; }
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: var(--sans);
-      -webkit-font-smoothing: antialiased;
-      display: flex;
-      flex-direction: column;
-    }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: var(--sans); font-size: 16px; line-height: 1.7; -webkit-font-smoothing: antialiased; }
 
-    nav {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      z-index: 100;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 1.25rem 4rem;
-      background: rgba(12,14,18,0.85);
-      backdrop-filter: blur(12px);
-      border-bottom: 0.5px solid var(--border);
-    }
-    .nav-logo {
-      font-family: var(--mono);
-      font-size: 13px;
-      color: var(--accent);
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      text-decoration: none;
-    }
-    .back-link {
-      font-family: var(--mono);
-      font-size: 12px;
-      color: #c8c4bc;
-      text-decoration: none;
-      letter-spacing: 0.05em;
-      transition: color 0.2s;
-    }
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 4rem; background: rgba(12,14,18,0.85); backdrop-filter: blur(12px); border-bottom: 0.5px solid var(--border); }
+    .nav-logo { font-family: var(--mono); font-size: 13px; color: var(--accent); letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none; }
+    .back-link { font-family: var(--mono); font-size: 12px; color: #c8c4bc; text-decoration: none; letter-spacing: 0.05em; transition: color 0.2s; }
     .back-link:hover { color: var(--accent); }
 
-    .main {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 4rem;
-      text-align: center;
-      min-height: 100vh;
-    }
+    .hero { height: 90vh; position: relative; overflow: hidden; display: flex; align-items: flex-end; padding: 4rem; }
+    .hero-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; }
+    .hero::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, rgba(12,14,18,0.95) 0%, rgba(12,14,18,0.4) 60%, transparent 100%); }
+    .hero-content { position: relative; z-index: 2; max-width: 700px; }
+    .hero-tag { font-family: var(--mono); font-size: 11px; color: var(--accent); letter-spacing: 0.18em; text-transform: uppercase; margin-bottom: 1rem; }
+    .hero-title { font-family: var(--mono); font-size: clamp(2rem, 4vw, 3.5rem); font-weight: 700; line-height: 1.1; color: var(--text); margin-bottom: 1.25rem; }
+    .hero-sub { font-size: 1.05rem; color: rgba(232,228,220,0.7); max-width: 540px; line-height: 1.7; }
 
-    .wip-tag {
-      font-family: var(--mono);
-      font-size: 11px;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 2.5rem;
-      border: 0.5px solid var(--accent);
-      padding: 0.4rem 1rem;
-      display: inline-block;
-    }
+    .section { padding: 5rem 4rem; max-width: 1100px; margin: 0 auto; }
+    .section-label { font-family: var(--mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.75rem; }
+    .section-title { font-family: var(--mono); font-size: 1.6rem; font-weight: 700; margin-bottom: 1.75rem; color: var(--text); }
+    .section-text { color: var(--text-muted); font-size: 1rem; line-height: 1.9; max-width: 680px; }
+    .section-text p { margin-bottom: 1.25rem; }
+    .section-text p:last-child { margin-bottom: 0; }
+    .section-text strong { color: var(--text); font-weight: 500; }
 
-    .wip-title {
-      font-family: var(--mono);
-      font-size: clamp(3rem, 10vw, 8rem);
-      font-weight: 700;
-      color: var(--text);
-      line-height: 1;
-      letter-spacing: -0.02em;
-      margin-bottom: 2.5rem;
-    }
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
+    .two-col.reverse { direction: rtl; }
+    .two-col.reverse > * { direction: ltr; }
 
-    .wip-title span {
-      color: var(--accent);
-    }
+    .img-full { width: 100%; display: block; border: 0.5px solid var(--border); }
+    .img-caption { font-family: var(--mono); font-size: 10px; color: var(--text-muted); letter-spacing: 0.08em; margin-top: 0.6rem; text-transform: uppercase; }
 
-    .wip-desc {
-      font-size: 1rem;
-      color: var(--text-muted);
-      max-width: 480px;
-      line-height: 1.8;
-      margin-bottom: 3rem;
-    }
+    .specs-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1px; border: 1px solid var(--border); margin-top: 3rem; }
+    .spec-item { padding: 1.25rem 1.5rem; background: var(--bg2); }
+    .spec-label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.4rem; }
+    .spec-value { font-size: 13px; color: var(--text); line-height: 1.5; }
 
-    .wip-desc strong {
-      color: var(--text);
-      font-weight: 500;
-    }
+    .configs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; border: 1px solid var(--border); margin-top: 2rem; }
+    .config-item { padding: 1.5rem; background: var(--bg2); }
+    .config-name { font-family: var(--mono); font-size: 0.85rem; font-weight: 700; color: var(--text); margin-bottom: 0.3rem; }
+    .config-badge { font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.75rem; }
+    .config-desc { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
 
-    .progress-bar {
-      width: 240px;
-      height: 1px;
-      background: var(--border);
-      position: relative;
-      margin: 0 auto 0.75rem;
-      overflow: hidden;
-    }
-    .progress-bar::after {
-      content: '';
-      position: absolute;
-      left: -100%;
-      top: 0;
-      height: 100%;
-      width: 100%;
-      background: linear-gradient(to right, transparent, var(--accent), transparent);
-      animation: sweep 2.5s ease-in-out infinite;
-    }
-    @keyframes sweep {
-      0% { left: -100%; }
-      100% { left: 100%; }
-    }
-    .progress-label {
-      font-family: var(--mono);
-      font-size: 10px;
-      color: var(--text-muted);
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      opacity: 0.5;
-    }
+    .timeline { display: flex; flex-direction: column; gap: 0; border: 1px solid var(--border); margin-top: 2rem; }
+    .timeline-item { display: grid; grid-template-columns: 120px 1fr; gap: 0; border-bottom: 0.5px solid var(--border); }
+    .timeline-item:last-child { border-bottom: none; }
+    .timeline-step { padding: 1.25rem 1.5rem; background: var(--bg2); border-right: 0.5px solid var(--border); display: flex; align-items: center; }
+    .timeline-step span { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); }
+    .timeline-body { padding: 1.25rem 1.5rem; }
+    .timeline-title { font-family: var(--mono); font-size: 0.8rem; font-weight: 700; color: var(--text); margin-bottom: 0.3rem; }
+    .timeline-desc { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
 
-    .eta {
-      margin-top: 3rem;
-      font-family: var(--mono);
-      font-size: 11px;
-      color: var(--text-muted);
-      letter-spacing: 0.1em;
-      opacity: 0.6;
-    }
+    .divider { border: none; border-top: 0.5px solid var(--border); margin: 0 4rem; }
+    footer { padding: 2rem 4rem; border-top: 0.5px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+    footer p { font-family: var(--mono); font-size: 11px; color: var(--text-muted); }
 
-    footer {
-      padding: 2rem 4rem;
-      border-top: 0.5px solid var(--border);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    footer p {
-      font-family: var(--mono);
-      font-size: 11px;
-      color: var(--text-muted);
-    }
-
-    @media (max-width: 600px) {
+    @media (max-width: 800px) {
       nav { padding: 1rem 1.5rem; }
-      .main { padding: 2rem; }
+      .hero { padding: 2rem; }
+      .section { padding: 3rem 1.5rem; }
+      .divider { margin: 0 1.5rem; }
+      .two-col { grid-template-columns: 1fr; gap: 2rem; }
+      .two-col.reverse { direction: ltr; }
+      .configs-grid { grid-template-columns: 1fr; }
+      .timeline-item { grid-template-columns: 1fr; }
+      .timeline-step { border-right: none; border-bottom: 0.5px solid var(--border); }
       footer { padding: 1.5rem; flex-direction: column; gap: 0.5rem; }
     }
+  
+    .img-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+    .img-pair img { width: 100%; display: block; border: 0.5px solid var(--border); aspect-ratio: 4 / 3; object-fit: cover; }
+    .img-stack { display: grid; gap: 1.5rem; }
+    .note { font-family: var(--mono); font-size: 11px; color: var(--text-muted); letter-spacing: 0.05em; margin-top: 2rem; }
+    @media (max-width: 800px) { .img-pair { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
 
   <nav>
-    <a href="../portfolio.html" class="nav-logo">← G. Sambo</a>
+    <a href="../portfolio.html" class="nav-logo">&larr; G. Sambo</a>
     <a href="../portfolio.html" class="back-link">Back to portfolio</a>
   </nav>
 
-  <div class="main">
-    <span class="wip-tag">MSc Thesis · Completed October 2026</span>
-    <h1 class="wip-title">Flettner<br><span>Rotor.</span></h1>
-    <p class="wip-desc">
-      Experimental and numerical investigation of the <strong>Flettner rotor</strong> - a rotating cylinder that generates lift through the Magnus effect, with applications in wind-assisted ship propulsion. <em>Wind Tunnel and Numerical Study of a Finite Flettner Rotor at High Reynolds Numbers for Wind-Assisted Ship Propulsion.</em> A wind tunnel campaign in the GVPM facility of Politecnico di Milano, from the critical to the supercritical Reynolds regime, with force balance and surface-pressure measurements, smoke visualization and several endplate geometries, combined with 2D and 3D OpenFOAM simulations to validate turbulence and transition models and assess wind tunnel confinement.
-    </p>
-    <p class="eta">Full project page coming soon</p>
+  <!-- HERO -->
+  <div class="hero">
+    <img src="../images/flettner/hero.jpg" alt="Flettner rotor model with smoke visualization in the GVPM wind tunnel" class="hero-img" />
+    <div class="hero-content">
+      <p class="hero-tag">MSc Thesis &middot; Wind tunnel + CFD &middot; Politecnico di Milano &middot; A.A. 2025-2026</p>
+      <h1 class="hero-title">Flettner Rotor for<br>Wind-Assisted<br>Ship Propulsion</h1>
+      <p class="hero-sub">A finite, endplated rotor tested in the wind tunnel from the critical to the supercritical Reynolds regime, and modelled in OpenFOAM to understand what model-scale data can say about full-scale rotor sails.</p>
+    </div>
   </div>
 
+  <!-- OVERVIEW -->
+  <section class="section">
+    <div class="two-col">
+      <div>
+        <p class="section-label">Overview</p>
+        <h2 class="section-title">Sails that spin.</h2>
+        <div class="section-text">
+          <p>
+            Rotor sails are tall rotating cylinders mounted on the deck of a ship. Spinning in the wind, they generate a force perpendicular to it through the <strong>Magnus effect</strong>, which can push the ship forward and cut fuel consumption. They are one of the most mature wind-assisted propulsion technologies.
+          </p>
+          <p>
+            Most wind tunnel data on rotating cylinders come either from low Reynolds numbers or from quasi-two-dimensional models without endplates. Real rotor sails are <strong>finite, wall-mounted, fitted with endplates</strong> and work at much higher Reynolds numbers.
+          </p>
+          <p>
+            The thesis, carried out with Riccardo Schido under the supervision of Prof. Sara Muggiasca and Ing. Stefano Giuseppe Giappino, addressed that gap with three goals: reach full-scale flow regimes in the tunnel, understand which aerodynamic behaviours carry over to full scale, and extend the experiments with CFD.
+          </p>
+        </div>
+      </div>
+      <div>
+        <img src="../images/flettner/model-test-section.jpg" alt="Scaled Flettner rotor model in the test section" class="img-full" />
+        <p class="img-caption">Scaled rotor model in the GVPM low-turbulence test section</p>
+      </div>
+    </div>
+
+    <div class="specs-grid">
+      <div class="spec-item"><p class="spec-label">Facility</p><p class="spec-value">GVPM wind tunnel, Politecnico di Milano</p></div>
+      <div class="spec-item"><p class="spec-label">Model</p><p class="spec-value">1:6 scale rotor, motor-driven</p></div>
+      <div class="spec-item"><p class="spec-label">Configurations</p><p class="spec-value">Bare tip + 3 endplate sizes</p></div>
+      <div class="spec-item"><p class="spec-label">Flow regime</p><p class="spec-value">Critical to supercritical</p></div>
+      <div class="spec-item"><p class="spec-label">Measurements</p><p class="spec-value">Forces &middot; surface pressure &middot; smoke</p></div>
+      <div class="spec-item"><p class="spec-label">CFD</p><p class="spec-value">OpenFOAM &middot; RANS / URANS &middot; HPC</p></div>
+      <div class="spec-item"><p class="spec-label">Post-processing</p><p class="spec-value">MATLAB &middot; ParaView</p></div>
+      <div class="spec-item"><p class="spec-label">Team</p><p class="spec-value">2 MSc students</p></div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- EXPERIMENTAL -->
+  <section class="section">
+    <div class="two-col reverse">
+      <div class="img-stack">
+        <div>
+          <img src="../images/flettner/gvpm-test-section.jpg" alt="GVPM low-turbulence test section" class="img-full" />
+          <p class="img-caption">GVPM low-turbulence test section</p>
+        </div>
+        <div class="img-pair">
+          <div>
+            <img src="../images/flettner/force-balance.jpg" alt="Strain-gauge force balance" />
+            <p class="img-caption">Strain-gauge balance on the instrumented column</p>
+          </div>
+          <div>
+            <img src="../images/flettner/smoke-setup.jpg" alt="Smoke visualization setup" />
+            <p class="img-caption">Smoke released upstream of the rotor</p>
+          </div>
+        </div>
+      </div>
+      <div>
+        <p class="section-label">Wind tunnel campaign</p>
+        <h2 class="section-title">Measuring a<br>spinning cylinder.</h2>
+        <div class="section-text">
+          <p>
+            The rotor spins inside the low-turbulence test section, driven by an electric motor. An interchangeable upper disk rotates with the cylinder in four configurations, while a fixed lower disk reproduces the effect of the ship deck.
+          </p>
+          <p>
+            Three measurement chains ran side by side: a <strong>strain-gauge balance</strong> for lift and drag, calibrated with dead weights; a single <strong>pressure transducer on the rotor skin</strong> that sweeps the whole circumference as the rotor turns, read through a slip ring and an encoder; and <strong>smoke visualization</strong> from several viewpoints, including a high-speed camera.
+          </p>
+          <p>
+            Spin-ratio sweeps, Reynolds sweeps and quasi-static sweeps at very low rotation covered the test matrix. Every point was post-processed in MATLAB with repeatability and uncertainty analysis, and the pressure integration was cross-checked against the balance.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- FLOW VISUALISATION -->
+  <section class="section">
+    <p class="section-label">Flow visualisation</p>
+    <h2 class="section-title">Watching the wake turn.</h2>
+    <div class="section-text" style="margin-bottom:2rem;">
+      <p>
+        High-speed footage shows how rotation reshapes the flow: at low spin ratio the wake is wide and irregular, dominated by vortex shedding; once rotation takes over, the wake becomes narrow, deflected and almost steady.
+      </p>
+    </div>
+    <div class="img-pair">
+      <div>
+        <img src="../images/flettner/smoke-k1.jpg" alt="Smoke visualization at low spin ratio" />
+        <p class="img-caption">Low spin ratio: wide, irregular wake</p>
+      </div>
+      <div>
+        <img src="../images/flettner/smoke-k3.jpg" alt="Smoke visualization at high spin ratio" />
+        <p class="img-caption">Higher spin ratio: narrow, deflected wake</p>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- NUMERICAL -->
+  <section class="section">
+    <div class="two-col">
+      <div>
+        <p class="section-label">Numerical model</p>
+        <h2 class="section-title">Where the tunnel<br>cannot go.</h2>
+        <div class="section-text">
+          <p>
+            A wind tunnel has limits: at the highest wind speeds the motor cannot reach the largest spin ratios, and the pressure is measured at a single height. A validated numerical model can extend the picture beyond those limits.
+          </p>
+          <p>
+            The rotor was simulated in <strong>OpenFOAM</strong> on the Politecnico di Milano HPC cluster, with wall-resolved meshes built in snappyHexMesh. Two turbulence closures were compared, k-&omega; SST and its <strong>transition extension SST-LM</strong>, after a preliminary 2D study on the static cylinder through the drag crisis.
+          </p>
+          <p>
+            Two domains share the same setup: an <strong>open-field domain</strong> for verification against literature and grid convergence, and a <strong>test-section domain</strong> that reproduces the tunnel walls, to compare with the experiment and quantify confinement effects.
+          </p>
+        </div>
+      </div>
+      <div class="img-stack">
+        <div>
+          <img src="../images/flettner/cfd-mesh.jpg" alt="Computational mesh around the rotor" class="img-full" />
+          <p class="img-caption">Mesh refinement around the rotor</p>
+        </div>
+        <div>
+          <img src="../images/flettner/cfd-rotor.jpg" alt="CFD surface pressure and streamlines on the rotor" class="img-full" />
+          <p class="img-caption">Surface pressure and streamlines from the CFD model</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- WORKFLOW -->
+  <section class="section">
+    <p class="section-label">Workflow</p>
+    <h2 class="section-title">From calibration to confinement.</h2>
+    <div class="timeline">
+      <div class="timeline-item"><div class="timeline-step"><span>Step 01</span></div><div class="timeline-body"><p class="timeline-title">Setup validation</p><p class="timeline-desc">Static cylinder through the drag crisis compared with literature; quasi-static rotation used to reconstruct the pressure distribution of the non-rotating rotor.</p></div></div>
+      <div class="timeline-item"><div class="timeline-step"><span>Step 02</span></div><div class="timeline-body"><p class="timeline-title">Test campaign</p><p class="timeline-desc">Spin-ratio and Reynolds sweeps for the bare tip and three endplate sizes, with forces and surface pressure acquired together.</p></div></div>
+      <div class="timeline-item"><div class="timeline-step"><span>Step 03</span></div><div class="timeline-body"><p class="timeline-title">Independent cross-check</p><p class="timeline-desc">Sectional forces from pressure integration compared with the balance measurements, plus repeatability and uncertainty analysis.</p></div></div>
+      <div class="timeline-item"><div class="timeline-step"><span>Step 04</span></div><div class="timeline-body"><p class="timeline-title">Smoke visualization</p><p class="timeline-desc">Wake topology across spin ratios, recorded from several viewpoints including a high-speed camera.</p></div></div>
+      <div class="timeline-item"><div class="timeline-step"><span>Step 05</span></div><div class="timeline-body"><p class="timeline-title">CFD verification</p><p class="timeline-desc">Grid convergence study and comparison with reference simulations in the open-field domain; choice of the turbulence closure.</p></div></div>
+      <div class="timeline-item"><div class="timeline-step"><span>Step 06</span></div><div class="timeline-body"><p class="timeline-title">CFD validation and confinement</p><p class="timeline-desc">Test-section simulations compared with forces, pressure distributions and smoke, then with the open field to isolate the effect of the tunnel walls.</p></div></div>
+    </div>
+    <p class="note">Quantitative results are not published on this page.</p>
+  </section>
+
   <footer>
-    <p>© 2026 Giovanni Sambo</p>
-    <a href="../portfolio.html" style="font-family: var(--mono); font-size: 11px; color: var(--text-muted); text-decoration: none;">← Back to portfolio</a>
+    <p>&copy; 2026 Giovanni Sambo</p>
+    <a href="../portfolio.html" style="font-family: var(--mono); font-size: 11px; color: var(--text-muted); text-decoration: none;">&larr; Back to portfolio</a>
   </footer>
 
 </body>
